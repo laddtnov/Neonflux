@@ -1,4 +1,4 @@
-# Cyberpunk Terminal
+# Neonflux
 
 Every surface the theme touches, on one page. Read this in **Reading view**,
 **Live Preview**, and **Source mode** — they render differently, and a rule

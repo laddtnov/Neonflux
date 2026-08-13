@@ -1,8 +1,8 @@
 {
-  "name": "cyberpunk-obsidian",
+  "name": "neonflux",
   "private": true,
   "type": "module",
-  "description": "Cyberpunk Terminal — an Obsidian theme. Palette shared with @laddtnov/cyberpunk-ui.",
+  "description": "Neonflux — an Obsidian theme. Palette shared with @laddtnov/cyberpunk-ui.",
   "license": "MIT",
   "scripts": {
     "build": "node scripts/build.js",

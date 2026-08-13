@@ -12,7 +12,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VAULT="${1:-$ROOT/demo-vault}"
-NAME="Cyberpunk Terminal"
+NAME="Neonflux"
 DEST="$VAULT/.obsidian/themes/$NAME"
 
 if [ ! -d "$VAULT" ]; then

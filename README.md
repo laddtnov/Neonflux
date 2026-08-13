@@ -1,4 +1,4 @@
-# Cyberpunk Terminal
+# Neonflux
 
 An Obsidian theme. Neon on near-black, machined edges, Orbitron headings over
 a `>_` prompt. Light mode included and not an afterthought.
@@ -10,8 +10,8 @@ Palette shared with [`@laddtnov/cyberpunk-ui`](https://github.com/laddtnov/cyber
 Not yet in the community themes list. To try it now:
 
 ```sh
-git clone https://github.com/laddtnov/cyberpunk-obsidian
-cd cyberpunk-obsidian
+git clone https://github.com/laddtnov/Neonflux
+cd Neonflux
 npm run build
 scripts/install-dev.sh /path/to/your/vault
 ```
