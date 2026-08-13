@@ -49,7 +49,23 @@ npm run build           # src/theme.css + fonts -> theme.css
 npm run check:contrast  # WCAG check, both themes
 npm run dev             # build, then install into demo-vault/
 npm run build:fonts     # re-download and re-inline the fonts (rarely needed)
+npm run release 0.2.0   # bump, verify, tag, publish
 ```
+
+### Releasing
+
+Use `npm run release`, not `npm version`. **The tag must equal the
+`manifest.json` version exactly, with no `v` prefix.** Obsidian's community
+theme bot installs assets from the release whose tag matches the manifest, and
+rejects `v0.1.0` against a manifest saying `0.1.0` with *"No release matches
+your manifest version"*. The sibling `cyberpunk-ui` repo uses `npm version`,
+which tags *with* a `v` — carrying that habit here breaks the listing, which
+is exactly why this repo has its own script.
+
+The script refuses to publish if the branch isn't `main`, the tag already
+exists, the tree is dirty, local and origin have diverged, the contrast check
+fails, or `theme.css` is stale relative to its sources. Release notes come
+from `docs/release-notes/<version>.md` if present, otherwise from the commits.
 
 `demo-vault/` is a throwaway vault whose single note exercises every surface
 the theme touches. Open it in Obsidian and reload with `Cmd-R` after a build.
