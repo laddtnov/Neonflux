@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Font coverage check</title>
+<link rel="stylesheet" href="../theme.css">
+<style>
+  body { background:#0a0a0c; color:#d1d1d1; padding:2rem; }
+  p { font-size:1.4rem; margin:.4rem 0; }
+  .stack { font-family:'Rajdhani','Exo 2',sans-serif; }
+  .rajdhani { font-family:'Rajdhani',serif; }
+  .exo { font-family:'Exo 2',serif; }
+  .mono { font-family:'Share Tech Mono','JetBrains Mono',serif; }
+  .h { font-family:'Orbitron','Unbounded',serif; }
+  pre { color:#00f2ff; font-size:1rem; }
+</style>
+<p class="stack">stack — Latin ABC / Кирилиця Привіт</p>
+<p class="rajdhani">Rajdhani only — Latin ABC / Кирилиця Привіт</p>
+<p class="exo">Exo 2 only — Latin ABC / Кирилиця Привіт</p>
+<p class="mono">mono — Latin ABC / Кирилиця Привіт</p>
+<p class="h">HEADS — ABC / ПРИВІТ</p>
+<pre id="out"></pre>
+<script>
+  document.fonts.ready.then(() => {
+    const probes = [
+      ["Rajdhani  latin", "16px Rajdhani", "Abc"],
+      ["Rajdhani  cyrillic", "16px Rajdhani", "Привіт"],
+      ["Exo 2     cyrillic", "16px 'Exo 2'", "Привіт"],
+      ["Unbounded cyrillic", "700 16px Unbounded", "ПРИВІТ"],
+      ["Orbitron  latin", "700 16px Orbitron", "ABC"],
+      ["JetBrains cyrillic", "16px 'JetBrains Mono'", "Привіт"],
+      ["ShareTech latin", "16px 'Share Tech Mono'", "Abc"],
+    ];
+    const lines = probes.map(
+      ([label, font, text]) =>
+        `${label.padEnd(20)} ${document.fonts.check(font, text) ? "YES" : "no "}`,
+    );
+    lines.push("", `loaded faces: ${document.fonts.size}`);
+    document.getElementById("out").textContent = lines.join("\n");
+  });
+</script>

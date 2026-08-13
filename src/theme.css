@@ -21,8 +21,8 @@
    Fonts degrade to the system stack when not installed locally. The theme
    deliberately does NOT @import from a font CDN: Obsidian is offline-first
    and a remote fetch on every launch is both a privacy leak and a startup
-   stall. Until the faces are embedded, install Orbitron / Rajdhani / Share
-   Tech Mono locally or the theme silently renders in the system stack.
+   stall. The faces are embedded in the built theme.css by
+   scripts/build-fonts.js, so nothing needs installing.
 
    Rajdhani runs through prose as well as chrome — a deliberate choice for the
    aesthetic over the safer option of a neutral reading face. It is a
@@ -30,16 +30,25 @@
    read at length than a text face; users who feel that can override the text
    font in Settings -> Appearance without losing the rest of the theme. */
 body {
-  --font-text-theme: "Rajdhani", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    system-ui, sans-serif;
-  --font-interface-theme: "Rajdhani", -apple-system, BlinkMacSystemFont,
+  /* Each stack pairs a Latin-only display face with a Cyrillic companion.
+     Font fallback is per-GLYPH, not per-run: the browser uses Rajdhani for
+     every character Rajdhani has and reaches for Exo 2 only for the ones it
+     does not — which is exactly the Cyrillic. So a mixed Latin/Ukrainian note
+     renders correctly with no unicode-range rules and no JavaScript, and the
+     embedded Cyrillic faces carry only their Cyrillic subsets so no Latin
+     glyph ships twice. Companions were chosen to match: Exo 2 for Rajdhani's
+     techy geometry, Unbounded for Orbitron's wide sci-fi caps, JetBrains Mono
+     for Share Tech Mono's terminal feel. */
+  --font-text-theme: "Rajdhani", "Exo 2", -apple-system, BlinkMacSystemFont,
     "Segoe UI", system-ui, sans-serif;
-  --font-monospace-theme: "Share Tech Mono", "Hack Nerd Font Mono",
-    "JetBrains Mono", "SFMono-Regular", Menlo, ui-monospace, monospace;
+  --font-interface-theme: "Rajdhani", "Exo 2", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-monospace-theme: "Share Tech Mono", "JetBrains Mono",
+    "Hack Nerd Font Mono", "SFMono-Regular", Menlo, ui-monospace, monospace;
 
-  --h1-font: "Orbitron", var(--font-interface-theme);
-  --h2-font: "Orbitron", var(--font-interface-theme);
-  --h3-font: "Rajdhani", var(--font-interface-theme);
+  --h1-font: "Orbitron", "Unbounded", var(--font-interface-theme);
+  --h2-font: "Orbitron", "Unbounded", var(--font-interface-theme);
+  --h3-font: "Rajdhani", "Exo 2", var(--font-interface-theme);
 
   /* Geometry — mirrors cyberpunk-ui's scale (2/4/8px). Sharp, not rounded:
      the aesthetic is machined, not friendly. */

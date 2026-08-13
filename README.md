@@ -46,15 +46,24 @@ reach surfaces no rule here mentions — sliders, toggles, callouts, the graph.
 
 ### Fonts
 
-Orbitron, Rajdhani and Share Tech Mono are **embedded as base64 woff2**, not
-linked from a CDN. Obsidian is offline-first: a theme that fetches fonts on
-every launch leaks the user's IP to a third party and stalls startup without a
-connection. Cost is about 85KB of the ~101KB `theme.css`.
+Six faces are **embedded as base64 woff2**, not linked from a CDN. Obsidian is
+offline-first: a theme that fetches fonts on every launch leaks the user's IP
+to a third party and stalls startup without a connection.
 
-All three are SIL Open Font License 1.1, which permits this redistribution.
+| Role | Latin | Cyrillic |
+| --- | --- | --- |
+| Headings | Orbitron | Unbounded |
+| Body and UI | Rajdhani | Exo 2 |
+| Code | Share Tech Mono | JetBrains Mono |
+
+The three Latin faces have no Cyrillic at all, so each is paired with a
+companion chosen to match its character. **Font fallback is per-glyph**, so
+the stacks alone do the work — no `unicode-range` rules, no JavaScript. The
+companions ship their Cyrillic subsets only, so no Latin glyph is embedded
+twice.
+
+All six are SIL Open Font License 1.1, which permits this redistribution.
 Licence text in [`fonts/OFL.txt`](fonts/OFL.txt).
-
-They are **Latin-only** — see the accessibility notes.
 
 ## Accessibility
 

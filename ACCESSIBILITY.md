@@ -46,6 +46,27 @@ vault to fix a checkbox, so controls now take a separate
 `--cyber-control-border` (3.37 dark / 3.24 light) and decorative edges stay
 subtle.
 
+**No Cyrillic.** Orbitron, Rajdhani and Share Tech Mono are all Latin-only, so
+a note mixing Latin and Ukrainian rendered in two visibly different faces
+mid-paragraph. Each face now has a Cyrillic companion in its stack — Exo 2
+behind Rajdhani, Unbounded behind Orbitron, JetBrains Mono behind Share Tech
+Mono — chosen to match the primary's character. Font fallback is per-glyph, so
+no `unicode-range` rules are needed: the browser takes each character from the
+first face in the stack that has it.
+
+Verified by measuring rendered text width against the generic fallback, since
+`document.fonts.check()` reports true for a fallback and cannot answer this:
+
+| Stack | Cyrillic width | Reading |
+| --- | --- | --- |
+| `serif` (baseline) | 143.65 | — |
+| `Rajdhani, serif` | 143.99 | Rajdhani has no Cyrillic |
+| `Exo 2, serif` | 159.26 | Exo 2 does |
+| `Rajdhani, Exo 2, serif` | 159.60 | the stack picks Exo 2 per glyph |
+| `Exo 2, serif` on **Latin** | 121.08 = serif | no Latin shipped, as intended |
+
+`scripts/font-check.html` reruns this against the built `theme.css`.
+
 ## Known and unresolved
 
 **The `>_` before every H1 is announced by screen readers.** It is CSS
@@ -55,17 +76,9 @@ user hears "greater-than underscore" before every top-level heading in their
 vault. Kept because it is the theme's signature and it is one short token.
 Deleting the `.markdown-rendered h1::before` rule removes it cleanly.
 
-**Rajdhani has no Cyrillic.** Confirmed visually: in a note mixing Latin and
-Ukrainian, the Cyrillic runs render in the fallback system face — noticeably
-heavier and wider, mid-paragraph. Latin-ext is fine (`Größe`, `año`,
-`çalışma` all render in Rajdhani). Orbitron and Share Tech Mono are
-Latin-only too. Anyone writing in Cyrillic, Greek, or a non-Latin script gets
-a two-font document. The fix is a second display face with the coverage, or
-telling those users to override the text font in Settings.
-
 **Rajdhani is a display face doing a text face's job.** It is condensed with a
 low x-height, which costs measurable reading speed over a long note. This was
-a deliberate choice for the aesthetic — the earlier draft used a neutral
+a deliberate choice for the aesthetic — an earlier draft used a neutral
 reading face for prose and the cyberpunk faces only for headings and chrome.
 Users who feel it can override the text font in Settings → Appearance without
 losing the palette.
