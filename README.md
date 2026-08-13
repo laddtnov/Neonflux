@@ -6,6 +6,7 @@ a `>_` prompt. Light mode included and not an afterthought.
 [![Obsidian community theme](https://img.shields.io/badge/Obsidian-community%20theme-7c3aed?logo=obsidian&logoColor=white)](https://community.obsidian.md/themes/neonflux)
 [![Latest release](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fladdtnov%2FNeonflux%2Fmain%2Fmanifest.json&query=%24.version&label=release&color=00b3bf)](https://github.com/laddtnov/Neonflux/releases/latest)
 [![License](https://img.shields.io/badge/licence-MIT%20%2B%20OFL-00b3bf)](#licence)
+[![Buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-ff813f?logo=buymeacoffee&logoColor=white)](https://buymeacoffee.com/laddtnov)
 
 Palette shared with [`@laddtnov/cyberpunk-ui`](https://github.com/laddtnov/cyberpunk-ui).
 
