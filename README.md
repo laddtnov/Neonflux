@@ -5,6 +5,27 @@ a `>_` prompt. Light mode included and not an afterthought.
 
 Palette shared with [`@laddtnov/cyberpunk-ui`](https://github.com/laddtnov/cyberpunk-ui).
 
+![Neonflux in dark mode](docs/screenshots/dark.png)
+
+## What it is
+
+A neon-on-near-black theme for people who read in Obsidian for hours, built so
+the aesthetic does not cost legibility:
+
+- **Accents stay on short strings.** Headings, links, chrome, code tokens. Body
+  text is a calm near-white — neon is a poster palette, not a reading palette.
+- **Glow never touches text you read.** Only `h1` and `h2` carry it. A
+  text-shadow under a paragraph is a legibility bug in costume.
+- **Light mode is not an afterthought.** The neon hues are unusable on white
+  (cyan measures about 1.2:1), so they are replaced with dimmed equivalents
+  that clear WCAG AA.
+- **Contrast is enforced, not asserted.** A checker runs over both themes and
+  fails the build on regression, holding muted text and syntax colours to the
+  4.5:1 *text* floor rather than the 3.0 non-text one.
+- **Six fonts embedded, Latin and Cyrillic.** Nothing is fetched at launch.
+- **Zero JavaScript.** Built by remapping Obsidian's own design tokens, so it
+  reaches plugins and survives app updates.
+
 ## Install
 
 Not yet in the community themes list. To try it now:
@@ -78,4 +99,31 @@ Cyrillic gap and the screen-reader announcement of the `>_` prompt.
 
 ## Licence
 
-MIT for the theme. The bundled fonts are OFL 1.1.
+Two licences, because `theme.css` is a combined work.
+
+**The theme** — everything in `src/`, `scripts/`, and the documentation — is
+**MIT**. See [`LICENSE`](LICENSE).
+
+**The six embedded fonts** are **SIL Open Font License 1.1**, which is what
+permits bundling them here. The OFL is not MIT: notably it forbids selling the
+fonts on their own, and it requires the copyright notices to travel with the
+font data. Those notices are reproduced in full at the top of the built
+`theme.css` — not merely linked — because Obsidian installs `theme.css` and
+`manifest.json` alone, so a link would leave every installed copy carrying
+font binaries with no notice attached. The complete licence text is in
+[`fonts/OFL.txt`](fonts/OFL.txt) and ships as an asset on every release.
+
+| Font | Copyright |
+| --- | --- |
+| Orbitron | The Orbitron Project Authors (Reserved Font Name: "Orbitron") |
+| Rajdhani | Indian Type Foundry |
+| Share Tech Mono | Carrois Type Design, Ralph du Carrois (RFN: 'Share') |
+| Unbounded | The Unbounded Project Authors |
+| Exo 2 | The Exo 2 Project Authors |
+| JetBrains Mono | The JetBrains Mono Project Authors |
+
+The woff2 files are Google Fonts' subsets, redistributed unmodified and under
+their original family names.
+
+Obsidian is a trademark of Dynalist Inc. This theme is not affiliated with or
+endorsed by them; the name is used only to say what the theme is for.
