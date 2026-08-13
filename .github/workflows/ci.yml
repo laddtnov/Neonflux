@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# No `npm ci` step anywhere below: this project has zero dependencies and no
+# lockfile, so `npm ci` would fail outright. The scripts are plain Node with
+# only built-in modules.
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: WCAG contrast, both themes
+        run: node scripts/check-contrast.js
+
+      # theme.css is generated but committed, and it is the only file Obsidian
+      # loads. Editing src/theme.css without rebuilding ships a stale theme
+      # that looks correct locally — `npm run dev` installs the fresh copy into
+      # the demo vault — while everyone downloading the release gets the old
+      # one. Rebuilding and diffing is the only thing that catches that.
+      - name: Rebuild theme.css
+        run: node scripts/build.js
+
+      - name: Fail if the committed build is stale
+        run: |
+          if ! git diff --exit-code theme.css fonts/fonts.css; then
+            echo "::error::theme.css is out of date with its sources. Run 'npm run build' and commit the result."
+            exit 1
+          fi
+
+      # The release is installed by copying these two files into a vault, so a
+      # missing or malformed manifest breaks the install with no error the user
+      # can act on. Also enforces the rule the community bot rejected us for:
+      # the version carries no 'v'.
+      - name: Validate manifest.json
+        run: |
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            const manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
+            const missing = ["name", "version", "minAppVersion", "author"]
+              .filter((key) => !manifest[key]);
+            if (missing.length) {
+              console.error(`manifest.json missing: ${missing.join(", ")}`);
+              process.exit(1);
+            }
+            if (!/^\d+\.\d+\.\d+$/.test(manifest.version)) {
+              console.error(
+                `manifest version must be plain semver with no "v": got "${manifest.version}". ` +
+                  "Obsidian matches the release tag against this exactly.",
+              );
+              process.exit(1);
+            }
+            console.log(`${manifest.name} ${manifest.version} — manifest ok`);
+          '
