@@ -3,6 +3,10 @@
 An Obsidian theme. Neon on near-black, machined edges, Orbitron headings over
 a `>_` prompt. Light mode included and not an afterthought.
 
+[![Obsidian community theme](https://img.shields.io/badge/Obsidian-community%20theme-7c3aed?logo=obsidian&logoColor=white)](https://community.obsidian.md/themes/neonflux)
+[![Latest release](https://img.shields.io/github/v/release/laddtnov/Neonflux?color=00b3bf)](https://github.com/laddtnov/Neonflux/releases/latest)
+[![License](https://img.shields.io/badge/licence-MIT%20%2B%20OFL-00b3bf)](#licence)
+
 Palette shared with [`@laddtnov/cyberpunk-ui`](https://github.com/laddtnov/cyberpunk-ui).
 
 ![Neonflux in dark mode](docs/screenshots/dark.png)
@@ -28,7 +32,18 @@ the aesthetic does not cost legibility:
 
 ## Install
 
-Not yet in the community themes list. To try it now:
+**Settings → Appearance → Themes → Manage → search "Neonflux".**
+
+Or from the web: [community.obsidian.md/themes/neonflux](https://community.obsidian.md/themes/neonflux).
+
+<details>
+<summary>Manual install, or installing a development build</summary>
+
+Download `theme.css` and `manifest.json` from the
+[latest release](https://github.com/laddtnov/Neonflux/releases/latest) and put
+both in `YourVault/.obsidian/themes/Neonflux/`.
+
+To run an unreleased build from source:
 
 ```sh
 git clone https://github.com/laddtnov/Neonflux
@@ -37,7 +52,7 @@ npm run build
 scripts/install-dev.sh /path/to/your/vault
 ```
 
-Then pick it in Settings → Appearance → Themes.
+</details>
 
 ## Development
 
