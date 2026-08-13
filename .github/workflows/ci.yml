@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
 
+# Least privilege. Without this block the GITHUB_TOKEN inherits the repository
+# default, which can be read/write across every scope — far more than this job
+# needs. It only clones the repo and runs three Node scripts: it never comments,
+# never pushes, never touches releases or packages.
+permissions:
+  contents: read
+
 # No `npm ci` step anywhere below: this project has zero dependencies and no
 # lockfile, so `npm ci` would fail outright. The scripts are plain Node with
 # only built-in modules.
