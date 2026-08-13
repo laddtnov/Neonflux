@@ -4,7 +4,7 @@ An Obsidian theme. Neon on near-black, machined edges, Orbitron headings over
 a `>_` prompt. Light mode included and not an afterthought.
 
 [![Obsidian community theme](https://img.shields.io/badge/Obsidian-community%20theme-7c3aed?logo=obsidian&logoColor=white)](https://community.obsidian.md/themes/neonflux)
-[![Latest release](https://img.shields.io/github/v/release/laddtnov/Neonflux?color=00b3bf)](https://github.com/laddtnov/Neonflux/releases/latest)
+[![Latest release](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fladdtnov%2FNeonflux%2Fmain%2Fmanifest.json&query=%24.version&label=release&color=00b3bf)](https://github.com/laddtnov/Neonflux/releases/latest)
 [![License](https://img.shields.io/badge/licence-MIT%20%2B%20OFL-00b3bf)](#licence)
 
 Palette shared with [`@laddtnov/cyberpunk-ui`](https://github.com/laddtnov/cyberpunk-ui).
