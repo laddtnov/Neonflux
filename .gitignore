@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+
+# Google Fonts CSS, re-fetchable with `npm run build:fonts`.
+fonts/src/
+
+# Obsidian writes workspace state into the demo vault on every open.
+demo-vault/.obsidian/workspace.json
+demo-vault/.obsidian/themes/

@@ -1,0 +1,13 @@
+{
+  "name": "cyberpunk-obsidian",
+  "private": true,
+  "type": "module",
+  "description": "Cyberpunk Terminal — an Obsidian theme. Palette shared with @laddtnov/cyberpunk-ui.",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "build:fonts": "node scripts/build-fonts.js",
+    "check:contrast": "node scripts/check-contrast.js",
+    "dev": "npm run build && scripts/install-dev.sh"
+  }
+}
