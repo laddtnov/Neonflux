@@ -15,7 +15,7 @@ VAULT="${1:-$ROOT/demo-vault}"
 NAME="Neonflux"
 DEST="$VAULT/.obsidian/themes/$NAME"
 
-if [ ! -d "$VAULT" ]; then
+if [[ ! -d "$VAULT" ]]; then
   echo "No such vault: $VAULT" >&2
   exit 1
 fi

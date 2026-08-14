@@ -30,6 +30,14 @@ the diff.
 against a manifest saying `0.1.0`. Use `npm run release 0.2.0`, which derives
 the tag from the manifest and refuses a `v`.
 
+That command opens a pull request for the version bump, waits for it to merge
+under the normal branch rules, and only then publishes the tag and release —
+it does not push to `main`. Write `docs/release-notes/<version>.md` first, in
+its own pull request: the script reads it for the release body, and refuses to
+run at all with an uncommitted tree. If the bump PR is still waiting on checks
+when the script's wait window ends, nothing has been released — `git pull &&
+npm run release` with no version finishes the job.
+
 ## Style
 
 Prefer **remapping Obsidian's design tokens** over overriding its rules. Token
