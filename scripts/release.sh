@@ -43,15 +43,15 @@ die() { echo "error: $*" >&2; exit 1; }
 # their own pull request, and an uncommitted docs/release-notes/<version>.md
 # trips the dirty-tree check below rather than shipping unreviewed.
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-[ "$BRANCH" = "main" ] || die "on branch '$BRANCH'; releases are cut from main"
+[[ "$BRANCH" == "main" ]] || die "on branch '$BRANCH'; releases are cut from main"
 
-if [ -n "$(git status --porcelain)" ]; then
+if [[ -n "$(git status --porcelain)" ]]; then
   git status --short
   die "working tree is dirty — commit or stash first"
 fi
 
 git fetch -q origin main
-[ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] ||
+[[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]] ||
   die "local main and origin/main differ — push or pull first"
 
 # ── Verify, and check the built file is not stale ─────────────────
@@ -73,17 +73,17 @@ read_version() {
   /usr/bin/sed -n 's/.*"version": "\([^"]*\)".*/\1/p' manifest.json | head -1
 }
 
-if [ $# -gt 0 ]; then
+if (( $# > 0 )); then
   VERSION="$1"
   [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
     die "version must be plain semver with no 'v': got '$VERSION'"
   BUMPED=1
-  [ "$VERSION" != "$(read_version)" ] ||
+  [[ "$VERSION" != "$(read_version)" ]] ||
     die "manifest.json already reads '$VERSION' — re-run with no argument to release it"
 else
   VERSION="$(read_version)"
   BUMPED=0
-  [ -n "$VERSION" ] || die "could not read version from manifest.json"
+  [[ -n "$VERSION" ]] || die "could not read version from manifest.json"
   [[ "$VERSION" != v* ]] || die "manifest version must not start with 'v': '$VERSION'"
 fi
 
@@ -98,7 +98,7 @@ fi
 echo "Releasing $VERSION"
 
 # ── Phase 1: bump the version through a pull request ──────────────
-if [ "$BUMPED" -eq 1 ]; then
+if (( BUMPED == 1 )); then
   BUMP_BRANCH="release/$VERSION"
 
   git rev-parse --verify -q "$BUMP_BRANCH" >/dev/null &&
@@ -109,7 +109,7 @@ if [ "$BUMPED" -eq 1 ]; then
   echo "sets it to merge automatically once the checks pass, and then publishes"
   echo "tag $VERSION and a public release."
   read -r -p "Continue? [y/N] " reply
-  [ "$reply" = "y" ] || [ "$reply" = "Y" ] || die "aborted"
+  [[ "$reply" == [yY] ]] || die "aborted"
 
   git checkout -q -b "$BUMP_BRANCH"
 
@@ -129,14 +129,14 @@ if [ "$BUMPED" -eq 1 ]; then
 
   # A literal edit rather than a JSON tool, to keep the zero-dependency rule.
   /usr/bin/sed -i '' "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" manifest.json
-  [ "$(read_version)" = "$VERSION" ] ||
+  [[ "$(read_version)" == "$VERSION" ]] ||
     die "manifest.json still reads '$(read_version)' after the bump — check its format"
 
   git add manifest.json
   git commit -q -m "chore(release): $VERSION"
   git push -q -u origin "$BUMP_BRANCH"
 
-  if [ -f "docs/release-notes/$VERSION.md" ]; then
+  if [[ -f "docs/release-notes/$VERSION.md" ]]; then
     PR_BODY="Version bump for the $VERSION release. Notes are in \`docs/release-notes/$VERSION.md\`; the release is published from main once this merges."
   else
     PR_BODY="Version bump for the $VERSION release. No \`docs/release-notes/$VERSION.md\`, so the release notes will be generated from the commits since the last tag."
@@ -174,13 +174,21 @@ if [ "$BUMPED" -eq 1 ]; then
     case "$state" in
       MERGED) merged=1; break ;;
       CLOSED) die "the bump PR was closed without merging — nothing was released" ;;
+      # OPEN is the normal case — checks are still running. UNKNOWN is the
+      # `|| echo` above: the lookup itself failed, which a network blip, an
+      # expired gh token or a rate limit all produce. Neither is fatal, and
+      # neither should be: the loop is bounded, and it ends by telling you the
+      # PR has not merged and nothing was released. Anything else GitHub grows
+      # later lands here too, and waiting is the safe reading of a state this
+      # script does not recognise.
+      *) : ;;
     esac
     sleep 10
   done
 
   git checkout -q main
 
-  if [ "$merged" -eq 0 ]; then
+  if (( merged == 0 )); then
     echo
     echo "The bump PR has not merged yet: $(gh pr view "$BUMP_BRANCH" --repo "$REPO" --json url --jq .url)"
     echo "Nothing has been released. Once it merges, finish with:"
@@ -190,7 +198,7 @@ if [ "$BUMPED" -eq 1 ]; then
   fi
 
   git pull -q
-  [ "$(read_version)" = "$VERSION" ] ||
+  [[ "$(read_version)" == "$VERSION" ]] ||
     die "main does not carry version $VERSION after the merge — check the PR"
   # --delete-branch removed the remote one; this is its local counterpart.
   git branch -q -D "$BUMP_BRANCH" 2>/dev/null || true
@@ -200,7 +208,7 @@ else
   echo
   echo "This publishes tag $VERSION and a public release on $REPO."
   read -r -p "Continue? [y/N] " reply
-  [ "$reply" = "y" ] || [ "$reply" = "Y" ] || die "aborted"
+  [[ "$reply" == [yY] ]] || die "aborted"
 fi
 
 # ── Phase 2: publish ──────────────────────────────────────────────
@@ -210,7 +218,7 @@ fi
 # stdin here — the script is interactive already, and a blocked read halfway
 # through a release is the worst place to stall.
 NOTES_FILE="docs/release-notes/$VERSION.md"
-if [ -f "$NOTES_FILE" ]; then
+if [[ -f "$NOTES_FILE" ]]; then
   NOTES_ARGS=(--notes-file "$NOTES_FILE")
   echo "  notes: $NOTES_FILE"
 else
