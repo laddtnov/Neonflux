@@ -115,6 +115,13 @@ the stacks alone do the work — no `unicode-range` rules, no JavaScript. The
 companions ship their Cyrillic subsets only, so no Latin glyph is embedded
 twice.
 
+Only the **base `latin` and `cyrillic` subsets** are embedded. The `-ext`
+subsets were another 64KB — Church Slavonic and historic letterforms on one
+side, Central-European and Turkish diacritics on the other — against a 18KB
+stylesheet, which is what put `theme.css` past the size Obsidian's review is
+happy with. The trade is narrow and per-glyph: a Polish `ł` or a Czech `ř`
+takes the system UI font, the rest of the word stays in Rajdhani.
+
 All six are SIL Open Font License 1.1, which permits this redistribution.
 Licence text in [`fonts/OFL.txt`](fonts/OFL.txt).
 

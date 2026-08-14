@@ -21,6 +21,20 @@
  * exactly the Cyrillic. So the stacks in src/theme.css do the joining, and
  * this script only has to avoid shipping Latin twice.
  *
+ * BASE SUBSETS ONLY — no `latin-ext`, no `cyrillic-ext`. Obsidian's review
+ * flags a theme.css this size, and the whole file is font data: the authored
+ * stylesheet is 18KB of 189KB. The `-ext` subsets were 64KB of that, spent on
+ * glyphs this theme's users almost never type — `cyrillic-ext` is Church
+ * Slavonic, Abkhaz and historic letterforms; `latin-ext` is Central-European
+ * and Turkish diacritics. Dropping them keeps every glyph of English,
+ * Ukrainian and Russian in the theme faces and costs a third of the file.
+ *
+ * The cost is real, just narrow: a Polish `ł` or a Czech `ř` now falls back to
+ * the system UI font mid-word. Per-glyph fallback means only that character
+ * changes face, not the paragraph. If that ever needs reversing, add the
+ * subset back to the group below and re-run — nothing else in the build knows
+ * about it.
+ *
  * Run: node scripts/build-fonts.js
  */
 
@@ -39,12 +53,12 @@ const GROUPS = [
   {
     label: "primary (Latin)",
     query: "family=Orbitron:wght@700&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono",
-    subsets: new Set(["latin", "latin-ext"]),
+    subsets: new Set(["latin"]),
   },
   {
     label: "Cyrillic companions",
     query: "family=Unbounded:wght@700&family=Exo+2:wght@400;600;700&family=JetBrains+Mono:wght@400",
-    subsets: new Set(["cyrillic", "cyrillic-ext"]),
+    subsets: new Set(["cyrillic"]),
   },
 ];
 

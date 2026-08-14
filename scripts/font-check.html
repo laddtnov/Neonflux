@@ -17,6 +17,11 @@
 <p class="exo">Exo 2 only — Latin ABC / Кирилиця Привіт</p>
 <p class="mono">mono — Latin ABC / Кирилиця Привіт</p>
 <p class="h">HEADS — ABC / ПРИВІТ</p>
+<!-- Extended subsets are deliberately not embedded. This line is expected to
+     show per-glyph fallback: the accented characters take the system font
+     while the rest of the line stays in Rajdhani. If it ever renders wholly
+     uniform, a `-ext` subset crept back into fonts.css and the file grew. -->
+<p class="stack">ext (fallback expected) — ł ř ğ ș ő / ѣ ѫ ԥ</p>
 <pre id="out"></pre>
 <script>
   document.fonts.ready.then(() => {
