@@ -83,6 +83,16 @@ reading face for prose and the cyberpunk faces only for headings and chrome.
 Users who feel it can override the text font in Settings → Appearance without
 losing the palette.
 
+**Extended Latin and extended Cyrillic fall back to the system font.** Only
+the base `latin` and `cyrillic` subsets are embedded; the `-ext` subsets cost
+64KB against an 18KB stylesheet and pushed `theme.css` past the size Obsidian's
+review accepts. So a Polish `ł`, a Czech `ř`, a Turkish `ğ` — and on the
+Cyrillic side, Church Slavonic and minority-language letters — render in the
+system UI font. Fallback is per-glyph, so this shows up as one character in a
+different face, not a paragraph that changes shape. Ukrainian and Russian are
+fully covered by the `cyrillic` subset and are unaffected. Re-adding a subset
+is one line in `scripts/build-fonts.js`.
+
 **Not tested:** Windows and Linux rendering, mobile, the print stylesheet,
 high-contrast / forced-colors mode, and actual screen-reader navigation
 (VoiceOver). Canvas and graph view are token-mapped but were not inspected.
