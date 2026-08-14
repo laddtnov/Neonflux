@@ -5,6 +5,8 @@ area: ui
 files:
   - src/theme.css:378-472
   - ACCESSIBILITY.md:86-88
+milestone: 0.2.0
+order: 2
 ---
 
 ## Problem

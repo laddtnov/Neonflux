@@ -6,6 +6,8 @@ files:
   - fonts/fonts.css
   - scripts/font-check.html
   - ACCESSIBILITY.md:86-88
+milestone: 0.3.0
+order: 2
 ---
 
 ## Problem

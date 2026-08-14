@@ -6,6 +6,8 @@ files:
   - docs/screenshots/dark.png
   - docs/screenshots/README.md
   - README.md
+milestone: 0.2.0
+order: 4
 ---
 
 ## Problem

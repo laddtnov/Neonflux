@@ -5,6 +5,8 @@ area: ui
 files:
   - src/theme.css:77-377
   - README.md:100-120
+milestone: 0.3.0
+order: 4
 ---
 
 ## Problem

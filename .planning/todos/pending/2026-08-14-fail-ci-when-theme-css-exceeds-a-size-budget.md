@@ -5,6 +5,8 @@ area: tooling
 files:
   - .github/workflows/ci.yml:20-45
   - scripts/build.js:30-33
+milestone: 0.2.0
+order: 1
 ---
 
 ## Problem

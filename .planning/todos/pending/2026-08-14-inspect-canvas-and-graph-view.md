@@ -6,6 +6,8 @@ files:
   - src/theme.css:77-377
   - ACCESSIBILITY.md:86-88
   - demo-vault/Kitchen Sink.md
+milestone: 0.3.0
+order: 3
 ---
 
 ## Problem
