@@ -648,6 +648,118 @@ body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markd
   --callout-icon: lucide-square-code;
 }
 
+/* ── Style Settings ─────────────────────────────────────────────
+   Optional support for the Style Settings plugin, which reads the annotated
+   block below and draws a settings panel from it. The plugin scans the whole
+   stylesheet, so this can live beside the rules it drives rather than at the
+   top of the file.
+
+   EVERY TOGGLE TURNS SOMETHING OFF, and that is a constraint rather than a
+   style of writing. A `class-toggle` adds its id to `body` when enabled, so
+   a setting phrased as "Heading glow: on" would have to default to on and
+   apply its class by default — which would mean the glow only worked for
+   people who have the plugin installed. Phrasing each one as an opt-out
+   keeps the theme identical for everyone who never opens the panel, and the
+   plugin is a way to take things away rather than a dependency.
+
+   The five are not a sample of what could be exposed. Each one is a
+   trade-off ACCESSIBILITY.md already documents and defends — the glow, the
+   caps, the screen-reader cost of the `>_` prefix, Rajdhani doing a text
+   face's job, and the task colours. Exposing a knob for a decision the
+   theme has not already reasoned about in public would be inventing an
+   option rather than surfacing one. */
+
+/* @settings
+
+name: Neonflux
+id: neonflux
+settings:
+    -
+        id: neonflux-reading
+        title: Reading
+        description: The aesthetic costs legibility in a few specific places. Each of these gives that cost back.
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: neonflux-no-glow
+        title: Turn off heading glow
+        description: The glow on h1 and h2 is a text-shadow. It is already dropped for reduced-motion and in print; this drops it everywhere.
+        type: class-toggle
+        default: false
+        addCommand: true
+    -
+        id: neonflux-no-caps
+        title: Turn off uppercase headings
+        description: Headings are uppercased and tracked, which is the genre's signature and measurably slower to read. Worth turning off in a narrow column.
+        type: class-toggle
+        default: false
+    -
+        id: neonflux-system-text-font
+        title: Use the system font for body text
+        description: Rajdhani is a condensed display face with a low x-height doing a text face's job. This keeps the theme and its headings, and hands long-form prose back to your system's reading font.
+        type: class-toggle
+        default: false
+    -
+        id: neonflux-marks
+        title: Marks and states
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: neonflux-no-prompt
+        title: Turn off the >_ prefix before h1
+        description: Generated content is announced by most screen readers, so this reads out before every top-level heading in the vault. There is no CSS way to suppress that, so here is a switch.
+        type: class-toggle
+        default: false
+    -
+        id: neonflux-plain-task-states
+        title: Turn off task state colours
+        description: Task states keep their characters and lose their accents, for a vault that uses them structurally rather than as a status board.
+        type: class-toggle
+        default: false
+
+*/
+
+/* Mirrors the selectors that set the glow, at one class more specificity so
+   no !important is needed. */
+.neonflux-no-glow .markdown-rendered h1,
+.neonflux-no-glow .markdown-rendered h2,
+.neonflux-no-glow .markdown-source-view.mod-cm6 .HyperMD-header-1,
+.neonflux-no-glow .markdown-source-view.mod-cm6 .HyperMD-header-2 {
+  text-shadow: none;
+}
+
+.neonflux-no-caps .markdown-rendered h1,
+.neonflux-no-caps .markdown-rendered h2,
+.neonflux-no-caps .markdown-source-view.mod-cm6 .HyperMD-header-1,
+.neonflux-no-caps .markdown-source-view.mod-cm6 .HyperMD-header-2 {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* `content: none` rather than an empty string: it removes the box instead of
+   leaving an empty one, so the heading keeps its own leading edge. */
+.neonflux-no-prompt .markdown-rendered h1::before {
+  content: none;
+}
+
+/* Headings keep Orbitron — this hands back prose, which is where the
+   condensed face actually costs reading speed. The stack keeps the Cyrillic
+   companion, or a Ukrainian note would lose its face along with the Latin. */
+.neonflux-system-text-font {
+  --font-text-theme: "Exo 2", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    system-ui, sans-serif;
+}
+
+/* One class more specific than the per-state rules above, so the glyphs stay
+   and only the colour is taken back. */
+.neonflux-plain-task-states .task-list-item[data-task],
+.neonflux-plain-task-states .HyperMD-task-line[data-task] {
+  --flux-task-color: var(--text-muted);
+  --checkbox-color: var(--text-accent);
+}
+
 /* Every animation this theme adds is decorative, so all of it goes. */
 @media (prefers-reduced-motion: reduce) {
   .theme-dark .markdown-rendered h1,

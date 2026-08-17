@@ -69,6 +69,27 @@ which is the pair most likely to be wrong. It finds those nested palettes by
 name, so it fails loudly if the media block is renamed or removed rather than
 silently re-testing the base palette twice.
 
+## Adding a Style Settings toggle
+
+The annotated `@settings` block lives in `src/theme.css` beside the rules it
+drives. Two rules for anything added to it:
+
+**Phrase it as an opt-out.** A `class-toggle` applies its id to `body` when
+enabled, so a setting that defaults to on would only work for people who have
+the plugin installed — everyone else would lose the feature. Every toggle
+turns something off, and the theme is identical without the plugin.
+
+**Expose a decision the theme has already defended.** Each of the five is a
+trade-off ACCESSIBILITY.md documents and argues for. A knob for something that
+has not been reasoned about in public is inventing an option, not surfacing
+one, and every toggle multiplies the states the contrast floors have to hold
+across.
+
+The block is YAML inside a CSS comment, so a typo silently produces no panel
+rather than an error. Style Settings finds it with
+`/\/\*!?\s*@settings[\r\n]+?([\s\S]+?)\*\//` and needs `name`, `id` and a
+non-empty `settings` list.
+
 ## Testing a change
 
 There is no unit test suite; the app is the test. At minimum, look at the

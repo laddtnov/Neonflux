@@ -6,8 +6,9 @@ on macOS, dark and light, Reading view and Live Preview.
 ## Verified
 
 `npm run check:contrast` passes. It resolves the tokens out of
-`src/theme.css` and measures every pair a reader's eye lands on, in both
-themes — 31 pairs each.
+`src/theme.css` and measures every pair a reader's eye lands on — 35 pairs
+across four schemes: dark, light, and each of those again with the
+`prefers-contrast: more` overrides applied on top.
 
 The floors are role-aware, and stricter than the ones the sibling CSS kit
 uses. A note-taking app is read for hours, so **muted text and syntax-highlight
@@ -69,19 +70,35 @@ Verified by measuring rendered text width against the generic fallback, since
 
 ## Known and unresolved
 
+Several of these now have a switch. With the [Style Settings][ss] plugin
+installed, the glow, the uppercase headings, the `>_` prefix, the condensed
+body face and the task-state colours can each be turned off. That does not
+make the trade-offs below go away — the defaults are still the defaults, and
+most users will never open that panel — so they are documented here as
+honestly as before, with a note where a toggle exists.
+
+Every setting is an opt-*out*, which is a deliberate constraint rather than a
+phrasing preference: a toggle that defaulted to on would have to apply its
+class by default, and the feature would then only work for people who have the
+plugin. Phrased this way the theme is identical without it.
+
+[ss]: https://github.com/mgmeyers/obsidian-style-settings
+
 **The `>_` before every H1 is announced by screen readers.** It is CSS
 generated content, and there is no reliable way to hide that from assistive
 tech — `speak: never` is implemented nowhere that matters. A screen-reader
 user hears "greater-than underscore" before every top-level heading in their
 vault. Kept because it is the theme's signature and it is one short token.
-Deleting the `.markdown-rendered h1::before` rule removes it cleanly.
+**Turn off the `>_` prefix** in Style Settings, or delete the
+`.markdown-rendered h1::before` rule, which removes it cleanly.
 
 **Rajdhani is a display face doing a text face's job.** It is condensed with a
 low x-height, which costs measurable reading speed over a long note. This was
 a deliberate choice for the aesthetic — an earlier draft used a neutral
 reading face for prose and the cyberpunk faces only for headings and chrome.
 Users who feel it can override the text font in Settings → Appearance without
-losing the palette.
+losing the palette, or use **Use the system font for body text** in Style
+Settings, which hands back prose and keeps Orbitron on the headings.
 
 **Extended Latin and extended Cyrillic fall back to the system font.** Only
 the base `latin` and `cyrillic` subsets are embedded; the `-ext` subsets cost

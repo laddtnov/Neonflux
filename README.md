@@ -27,6 +27,11 @@ the aesthetic does not cost legibility:
 - **Contrast is enforced, not asserted.** A checker runs over both themes and
   fails the build on regression, holding muted text and syntax colours to the
   4.5:1 *text* floor rather than the 3.0 non-text one.
+- **Bendable, with the [Style Settings](https://github.com/mgmeyers/obsidian-style-settings)
+  plugin.** Five switches, each one giving back a trade-off this theme makes on
+  purpose: the glow, the uppercase headings, the `>_` prefix, the condensed
+  body face, the task colours. Every one is an opt-*out*, so the theme is
+  identical whether or not you have the plugin.
 - **Task states beyond done.** `- [+]` found, `- [?]` reviewing, `- [/]`
   testing, `- [>]` waiting, `- [-]` rejected — drawn as the literal character
   in the monospace face rather than as emoji, so a status column stays aligned
