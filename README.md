@@ -27,6 +27,10 @@ the aesthetic does not cost legibility:
 - **Contrast is enforced, not asserted.** A checker runs over both themes and
   fails the build on regression, holding muted text and syntax colours to the
   4.5:1 *text* floor rather than the 3.0 non-text one.
+- **Task states beyond done.** `- [+]` found, `- [?]` reviewing, `- [/]`
+  testing, `- [>]` waiting, `- [-]` rejected — drawn as the literal character
+  in the monospace face rather than as emoji, so a status column stays aligned
+  and the colours come from the palette instead of from your font vendor.
 - **Six fonts embedded, Latin and Cyrillic.** Nothing is fetched at launch.
 - **Zero JavaScript.** Built by remapping Obsidian's own design tokens, so it
   reaches plugins and survives app updates.

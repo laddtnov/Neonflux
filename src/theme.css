@@ -463,6 +463,184 @@ body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markd
   outline-offset: 2px;
 }
 
+/* ── Task states ────────────────────────────────────────────────
+   A vault used for tracking wants more states than done/not-done, and the
+   community convention encodes them in the checkbox itself — `- [/]`, `- [>]`
+   and so on. Obsidian puts that character on the LIST ITEM as `data-task`,
+   not on the input, and marks anything other than a space as checked. So
+   `- [/]` arrives as a checked box with `data-task="/"` on its parent, and
+   without this block every state below renders as the same cyan tick.
+
+   Drawn as the literal character in the monospace face rather than as icon
+   artwork. That is the cheapest possible implementation — no SVG payload
+   against a stylesheet with a size budget — and it is also the most honest
+   one for this theme: the marker IS terminal output rather than a picture of
+   it. The glyph and its colour are set as custom properties on the list item
+   and inherit down to the checkbox, so each state costs two declarations and
+   the drawing is written once.
+
+   `x` is deliberately left alone. Obsidian already draws it as a tick, gives
+   it strikethrough, and every user of every theme expects that — replacing it
+   would be a change of habit, not of style. It only takes the green. */
+.task-list-item[data-task="+"],
+.HyperMD-task-line[data-task="+"] {
+  --flux-task-glyph: "+";
+  --flux-task-color: var(--color-cyan);
+}
+
+.task-list-item[data-task="?"],
+.HyperMD-task-line[data-task="?"] {
+  --flux-task-glyph: "?";
+  --flux-task-color: var(--color-blue);
+}
+
+.task-list-item[data-task="/"],
+.HyperMD-task-line[data-task="/"] {
+  --flux-task-glyph: "/";
+  --flux-task-color: var(--color-yellow);
+}
+
+.task-list-item[data-task="x"],
+.HyperMD-task-line[data-task="x"] {
+  --checkbox-color: var(--color-green);
+}
+
+/* Nothing is happening to a waiting item, so it gets the muted grey every
+   other state spends an accent to avoid. */
+.task-list-item[data-task=">"],
+.HyperMD-task-line[data-task=">"] {
+  --flux-task-glyph: ">";
+  --flux-task-color: var(--text-muted);
+}
+
+/* Pink rather than red: #ff4d4d sits near the floor on this background, and
+   the magenta already carries "stop" everywhere else in the theme. */
+.task-list-item[data-task="-"],
+.HyperMD-task-line[data-task="-"] {
+  --flux-task-glyph: "-";
+  --flux-task-color: var(--color-pink);
+}
+
+/* Rejected reads as struck through for the same reason done does — Obsidian
+   applies that to x/X only, and a cancelled item wants it just as much. */
+.task-list-item[data-task="-"] {
+  text-decoration: var(--checklist-done-decoration);
+  color: var(--text-muted);
+}
+
+/* The box for a custom state: hollow, with the character inside it. Obsidian
+   fills a checked box and masks a tick into it, so both have to be undone —
+   the mask especially, since it would otherwise sit on top of the glyph. */
+.task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
+  > .task-list-item-checkbox,
+.task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
+  > p
+  > .task-list-item-checkbox,
+.HyperMD-task-line[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
+  .task-list-item-checkbox {
+  background-color: transparent;
+  border-color: var(--flux-task-color);
+  position: relative;
+}
+
+.task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
+  > .task-list-item-checkbox::after,
+.task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
+  > p
+  > .task-list-item-checkbox::after,
+.HyperMD-task-line[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
+  .task-list-item-checkbox::after {
+  content: var(--flux-task-glyph, "");
+  -webkit-mask-image: none;
+  mask-image: none;
+  background-color: transparent;
+  color: var(--flux-task-color);
+  font-family: var(--font-monospace-theme);
+  font-size: calc(var(--checkbox-size) * 0.85);
+  line-height: var(--checkbox-size);
+  text-align: center;
+  inset: 0;
+}
+
+/* ── Icons ──────────────────────────────────────────────────────
+   Obsidian's icons are lucide SVGs it injects itself, so a theme can restyle
+   them but cannot replace the artwork without shipping a mask per icon —
+   tens of KB against a budgeted stylesheet, to redraw a set that is already
+   geometric enough for this aesthetic. Restyling is done entirely through
+   Obsidian's own icon tokens, which costs nothing and reaches every icon in
+   the app including the ones plugins add.
+
+   Callout icons are the exception: those ARE addressable by name, and the
+   defaults lean soft — a pencil, a flame, a clipboard. Every name below was
+   checked against the lucide build Obsidian bundles, because a name that
+   does not resolve renders no icon at all rather than falling back. */
+body {
+  /* 1.75px is Obsidian's own default at this size; what changes is that the
+     accent now reaches hover, where the app leaves icons muted. */
+  --icon-color-hover: var(--text-accent);
+  --icon-opacity: 0.9;
+  --icon-opacity-hover: 1;
+}
+
+.callout[data-callout="note"] {
+  --callout-icon: lucide-terminal;
+}
+
+.callout[data-callout="abstract"],
+.callout[data-callout="summary"],
+.callout[data-callout="tldr"] {
+  --callout-icon: lucide-file-code;
+}
+
+.callout[data-callout="info"] {
+  --callout-icon: lucide-circuit-board;
+}
+
+.callout[data-callout="todo"] {
+  --callout-icon: lucide-list-checks;
+}
+
+.callout[data-callout="tip"],
+.callout[data-callout="hint"],
+.callout[data-callout="important"] {
+  --callout-icon: lucide-zap;
+}
+
+.callout[data-callout="success"],
+.callout[data-callout="check"],
+.callout[data-callout="done"] {
+  --callout-icon: lucide-check-check;
+}
+
+.callout[data-callout="question"],
+.callout[data-callout="help"],
+.callout[data-callout="faq"] {
+  --callout-icon: lucide-scan-search;
+}
+
+.callout[data-callout="warning"],
+.callout[data-callout="caution"],
+.callout[data-callout="attention"] {
+  --callout-icon: lucide-shield-alert;
+}
+
+.callout[data-callout="failure"],
+.callout[data-callout="fail"],
+.callout[data-callout="missing"] {
+  --callout-icon: lucide-x-octagon;
+}
+
+/* danger takes the octagon rather than the app's lightning bolt, which now
+   belongs to tip — a bolt reads as energy, not as hazard. */
+.callout[data-callout="danger"],
+.callout[data-callout="error"] {
+  --callout-icon: lucide-alert-octagon;
+}
+
+.callout[data-callout="example"] {
+  --callout-icon: lucide-square-code;
+}
+
 /* Every animation this theme adds is decorative, so all of it goes. */
 @media (prefers-reduced-motion: reduce) {
   .theme-dark .markdown-rendered h1,

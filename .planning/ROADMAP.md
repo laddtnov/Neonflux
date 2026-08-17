@@ -1,6 +1,7 @@
 # Roadmap
 
-Two milestones over the nine todos in `.planning/todos/pending/`.
+Two milestones. Ten items — nine planned at the outset, plus the task-state
+and icon work added to 0.2.0 while it was in flight.
 
 The cut is **not** by importance — mobile matters more than a print
 stylesheet, and it is in the later milestone anyway. It is by **what blocks the
@@ -24,7 +25,8 @@ Ship in this order — the first item is a prerequisite, and the last wants
 everything above it finished:
 
 1. **Fail CI when theme.css exceeds a size budget** — *tooling*
-   Goes first because item 3 adds bytes to the file Obsidian already flagged.
+   Goes first because the items below add bytes to the file Obsidian already
+   flagged.
    Adding the guard after the thing it guards against is how the 189KB
    happened the first time.
 
@@ -35,13 +37,24 @@ everything above it finished:
    them. Both are self-contained, need no hardware, and both currently fail
    silently for the user least able to work around it.
 
-3. **Support the Style Settings plugin** — *ui*
+3. **Style task states and icons** — *ui*
+   Added during the milestone rather than planned into it. Six task states
+   drawn as monospace characters, callout icons remapped, app icons restyled
+   through Obsidian's tokens rather than replaced. Sits here because it is
+   more palette work of the same kind, and because Style Settings will want
+   toggles for it — which is easier to write once the states exist than to
+   design in the abstract.
+
+   This is what pushed `theme.css` past the 150KB ceiling; it was raised to
+   165KB with the reasoning recorded in `scripts/check-size.js`.
+
+4. **Support the Style Settings plugin** — *ui*
    The headline feature, and last of the code items on purpose. Every toggle
    has to hold its contrast floors in both themes, so it wants the print and
    forced-colors paths already settled rather than being retrofitted across a
    matrix of toggle states.
 
-4. **Add a light-mode screenshot to the gallery assets** — *docs*
+5. **Add a light-mode screenshot to the gallery assets** — *docs*
    Last, so it photographs the finished release. Also the asset the release
    announcement needs.
 
