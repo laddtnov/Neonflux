@@ -43,6 +43,14 @@ jobs:
             exit 1
           fi
 
+      # Runs after the rebuild above, so it weighs the file the sources
+      # actually produce rather than whatever happened to be committed.
+      # Obsidian's review flagged this theme at 189KB once and nothing here
+      # noticed; a budget that fails the job is the only version of this check
+      # that would have.
+      - name: Size budget
+        run: node scripts/check-size.js
+
       # The release is installed by copying these two files into a vault, so a
       # missing or malformed manifest breaks the install with no error the user
       # can act on. Also enforces the rule the community bot rejected us for:

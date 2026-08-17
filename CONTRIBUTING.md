@@ -12,11 +12,12 @@ git checkout -b fix/whatever
 npm run dev            # build + install into demo-vault/
 # look at it in Obsidian, Cmd-R to reload
 npm run check:contrast
+npm run check:size
 git commit && git push -u origin fix/whatever
 gh pr create
 ```
 
-## The two things that break
+## The three things that break
 
 **`theme.css` is generated but committed.** `src/theme.css` is what you edit;
 `theme.css` at the repo root is `fonts/fonts.css` + `src/theme.css`, and it is
@@ -24,6 +25,16 @@ the only file Obsidian loads. Editing the source without running
 `npm run build` ships a stale theme that still looks right in your own vault,
 because `npm run dev` installed the fresh copy there. CI rebuilds and fails on
 the diff.
+
+**`theme.css` has a size budget, and CI enforces it.** The file is ~83% inlined
+font data, it reached 189KB once, and Obsidian's review flagged it. Two
+ceilings now fail the build: 150KB for the whole file and 112KB for the font
+payload alone, both in `scripts/check-size.js`. Split that way because a font
+subset creeping back and the stylesheet honestly growing are different
+problems. Going over is nearly always the former — check the `GROUPS` in
+`scripts/build-fonts.js`. If it is genuinely the latter, raise the budget and
+say why in the commit; a number quietly bumped whenever it is inconvenient is
+not a budget.
 
 **Release tags carry no `v`.** Obsidian matches the release tag against
 `manifest.json` exactly, and rejected the first release for tagging `v0.1.0`

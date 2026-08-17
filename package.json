@@ -8,6 +8,7 @@
     "build": "node scripts/build.js",
     "build:fonts": "node scripts/build-fonts.js",
     "check:contrast": "node scripts/check-contrast.js",
+    "check:size": "node scripts/check-size.js",
     "dev": "npm run build && scripts/install-dev.sh",
     "release": "scripts/release.sh"
   }
