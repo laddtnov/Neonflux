@@ -62,6 +62,13 @@ to 4.5:1, not 3.0, because a note app is read for hours and a code comment is
 text somebody parses. Adding a colour token means adding its pair to `PAIRS`
 in that script.
 
+That script checks **four** schemes, not two: dark and light, plus each one
+again with the `@media (prefers-contrast: more)` overrides applied on top.
+A token raised there is checked against a background that may not have moved,
+which is the pair most likely to be wrong. It finds those nested palettes by
+name, so it fails loudly if the media block is renamed or removed rather than
+silently re-testing the base palette twice.
+
 ## Testing a change
 
 There is no unit test suite; the app is the test. At minimum, look at the

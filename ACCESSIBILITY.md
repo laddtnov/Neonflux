@@ -124,6 +124,42 @@ CSS. Syntax highlighting collapses to two weights on paper on purpose: six
 hues that separate on screen become six near-identical greys on a mono
 printer, which reads as a broken export rather than as colour.
 
-**Not tested:** Windows and Linux rendering, mobile, high-contrast /
-forced-colors mode, and actual screen-reader navigation (VoiceOver). Canvas
-and graph view are token-mapped but were not inspected.
+**Forced colors replaces the palette, and the theme gets out of the way.** In
+`forced-colors: active` the OS supplies every colour and the theme stops being
+in charge — which is correct, and most of this theme survives it untouched:
+the UA forces colours to system keywords and drops `text-shadow`, so the
+heading glow removes itself with no rule needed. What does not survive is any
+affordance drawn with a background and nothing else, so callouts, code blocks
+and tag chips are given real borders, and the `>_` prefix drops its 55%
+opacity — opacity is not forced, and a faint mark defeats the point of a
+palette chosen for maximum separation.
+
+Two findings there were worth the trip:
+
+- **Blend modes are not reset by forced colors, and they erase content.**
+  Obsidian composites callouts, search highlights and table selections with
+  `mix-blend-mode`, `lighten` in dark and `darken` in light. Forced colors
+  then supplies black text on a white backdrop — and `lighten` of black over
+  white is white. The entire callout, text and border alike, rendered as blank
+  page. `darken` fails identically against a dark system palette, so neither
+  scheme was safe. Fixed at the token both derive from.
+- **A checked task was indistinguishable from an open one.** The tick is a
+  masked pseudo-element coloured by `background-color`, and the box fill is a
+  background too, so both flattened to the page colour and every task looked
+  open. The mask survives, so naming a system colour pair brings the real tick
+  back.
+
+**More contrast is a request, not a takeover.** Under `prefers-contrast: more`
+the theme keeps its palette and moves only the tokens sitting closest to their
+floors — muted and faint text, control borders, decorative edges — plus the
+heading glow, which is a legibility cost paid for atmosphere. The neon accents
+are already above 12:1 and are left alone. `scripts/check-contrast.js` checks
+these as two further schemes, base-plus-overrides, so the raised values are
+held to the same floors as the base palette.
+
+**Not tested:** Windows and Linux rendering, mobile, and actual screen-reader
+navigation (VoiceOver). Canvas and graph view are token-mapped but were not
+inspected. Forced colors was verified under Chrome's emulation of it, which
+drives the same code path a real high-contrast desktop does but is not the
+same as sitting in front of Windows High Contrast — that check belongs with
+the Windows testing in 0.3.0.
