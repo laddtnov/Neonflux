@@ -1,8 +1,29 @@
 Screenshots for the README and the Obsidian community themes listing.
 
-`dark.png` is the one the README embeds. Capture it from the demo vault's
-Kitchen Sink note in **Reading view** — the `>_` prompt before the H1 only
-renders there.
+`dark.png` is the one the gallery shows; `light.png` is for the README. Both
+are the **Kitchen Sink** note in **Reading view** — the `>_` prompt before the
+H1 only renders there.
+
+## Capturing a replacement pair
+
+The pair only works as a comparison if nothing but the colour scheme changes,
+so capture both in one sitting:
+
+1. Open Kitchen Sink directly, not embedded in another note. The tab should
+   read *Kitchen Sink* and the status bar ~520 words.
+2. Collapse the left sidebar (`Cmd+P` → "Toggle left sidebar"). An open search
+   pane is a third of the frame spent on "No matches found."
+3. Scroll to the top and do not move, resize or scroll between the two shots.
+4. Capture with `Cmd+Shift+4`, `Space`, then **Option-click** — Option drops
+   the window shadow, so the edges are clean. Without it the capture carries a
+   soft black margin the other shot will not have.
+5. Change only **Settings → Appearance → Base color scheme** between them.
+
+Both are then cropped to identical dimensions. The current pair is 2048x1280,
+taken from a 2048x1600 window with 320px trimmed off the bottom to reach the
+aspect ratio below; that trim costs the status bar and the "Heading two"
+section, and keeps the script-coverage block, which is the more distinguishing
+content.
 
 ## What the gallery actually takes
 
