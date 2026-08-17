@@ -1,6 +1,12 @@
 node_modules/
 .DS_Store
 
+# Editor and agent tooling writes here — launch configs, worktrees, local
+# session state. None of it describes this project: the launch.json that
+# turned up first claimed a dev server on port 3000, which does not exist
+# here, since `npm run dev` installs into a vault rather than serving.
+.claude/
+
 # Google Fonts CSS, re-fetchable with `npm run build:fonts`.
 fonts/src/
 

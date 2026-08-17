@@ -169,6 +169,14 @@ const PAIRS = [
   /* WCAG 1.4.11 wants 3:1 for the boundary that identifies a control. In
      Obsidian this token draws text-input and form-field borders, where the
      border IS the affordance, so the floor applies. */
+  /* Task-state glyphs are small monospace characters carrying the whole
+     meaning of the state, so they are read, not decoration. The waiting state
+     uses --text-muted and is covered by the muted-text pair above. */
+  ["--color-cyan", "--background-primary", 4.5, "task state: found"],
+  ["--color-blue", "--background-primary", 4.5, "task state: reviewing"],
+  ["--color-yellow", "--background-primary", 4.5, "task state: testing"],
+  ["--color-green", "--background-primary", 4.5, "task state: adopted"],
+  ["--color-pink", "--background-primary", 4.5, "task state: rejected"],
   ["--cyber-control-border", "--background-primary", 3.0, "control border"],
   ["--cyber-control-border", "--background-secondary", 3.0, "control border (sidebar)"],
   ["--checkbox-border-color", "--background-primary", 3.0, "checkbox border"],

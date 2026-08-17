@@ -35,14 +35,29 @@ const KB = 1024;
    budget that sits on today's size fails on the next routine font revision and
    gets raised reflexively until it means nothing.
 
-   TOTAL 150KB: ~26KB above the current 124KB, which is room for the Style
-   Settings block, and still ~39KB below the 189KB that drew the flag.
+   TOTAL 165KB. Raised once, from 150KB, and the reasoning is recorded here
+   because a number bumped whenever it is inconvenient is not a budget:
+
+     - 150KB was set when theme.css was 124KB and the only planned addition
+       was Style Settings. Three accessibility features landed after it — the
+       print stylesheet, forced-colors/prefers-contrast, and task-state icons
+       — none of which existed when the figure was chosen, and together they
+       account for the growth to 146KB.
+     - The stylesheet, not the fonts, is what grew. The embedded payload has
+       not moved from 103KB through any of it, which is exactly the split the
+       two budgets exist to show.
+     - 165KB still sits ~24KB below the 189KB that drew Obsidian's review
+       flag, and leaves ~19KB for the Style Settings block.
+
+   If this needs raising a second time, the honest move is probably to cut
+   comment volume or revisit the Cyrillic companions rather than to keep
+   lifting the ceiling toward the number that got the theme flagged.
 
    PAYLOAD 112KB: ~9KB above the current 103KB — enough that Google reissuing a
    face costs nobody an afternoon, far too little to hide a re-added subset.
-   The `-ext` subsets alone were 64KB. */
+   The `-ext` subsets alone were 64KB. Unchanged, and deliberately so. */
 const BUDGETS = {
-  total: 150 * KB,
+  total: 165 * KB,
   payload: 112 * KB,
 };
 
