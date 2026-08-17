@@ -471,6 +471,153 @@ body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markd
   }
 }
 
+/* ── Forced colors ──────────────────────────────────────────────
+   In forced-colors mode the OS replaces the palette wholesale and the theme
+   stops being in charge of colour. That is the intended behaviour, and most
+   of this theme survives it: the UA forces `color`, `background-color`,
+   `border-color` and `outline-color` to system keywords, and forces
+   `text-shadow` and `box-shadow` to none — so the heading glow removes
+   itself and needs no rule here.
+
+   What does NOT survive is any affordance drawn with a background and
+   nothing else. Every fill collapses to `Canvas`, so two surfaces that
+   differed only by tint become the same surface. The theme's own inline
+   code already carries a border and is fine; these do not.
+
+   Obsidian handles its chrome — buttons, dropdowns, toggles, tab focus all
+   have forced-colors rules in app.css. None of them reach note content,
+   which is what this block covers. */
+@media (forced-colors: active) {
+  /* Blend modes are NOT reset by forced colors, and that combination erases
+     content outright. Obsidian composites callouts, search highlights and
+     table selections with `mix-blend-mode: var(--highlight-mix-blend-mode)`,
+     which is `lighten` in dark and `darken` in light. Forced colors then
+     hands those elements black text on a white backdrop — and `lighten` of
+     black over white is white. The entire callout, text and border alike,
+     rendered as blank page. `darken` fails the same way against a dark
+     system palette, so neither scheme is safe.
+
+     Set at the token rather than on `.callout`, because the same variable
+     drives the other three composited surfaces and they fail identically. */
+  .theme-dark,
+  .theme-light {
+    --highlight-mix-blend-mode: normal;
+  }
+
+  /* A callout is a tinted rectangle and nothing else — Obsidian's own border
+     is a colour-mix that flattens away with the tint. Left alone it becomes
+     an ordinary paragraph, taking "this part is different" with it, which is
+     the same failure the print block fixes for the same reason. */
+  .markdown-rendered .callout,
+  .markdown-rendered pre {
+    border: 1px solid CanvasText;
+  }
+
+  /* A tag reads as a chip because of its fill. Without one it is body text
+     that happens to start with a hash. */
+  .markdown-rendered .tag {
+    border: 1px solid CanvasText;
+    border-radius: var(--radius-s);
+    padding: 0 0.3em;
+  }
+
+  /* The border IS the checkbox — there is nothing else to show it exists.
+     ButtonBorder rather than CanvasText to match what Obsidian already uses
+     for its own controls. */
+  input[type="checkbox"] {
+    border: 1px solid ButtonBorder;
+  }
+
+  /* Worse than an invisible checkbox is one whose STATE is invisible. The
+     tick is a masked pseudo-element coloured by `background-color`, and the
+     box fill is a background too, so forced colors flattens both to the page
+     colour: a done task and an open one render as the same empty square. The
+     mask itself survives — only the colour behind it was lost — so naming a
+     system pair brings the tick back rather than substituting a filled box.
+     SelectedItem is what Obsidian already uses for its own "on" control. */
+  input[type="checkbox"]:checked {
+    background-color: SelectedItem;
+    border-color: SelectedItem;
+  }
+
+  input[type="checkbox"]:checked::after {
+    background-color: SelectedItemText;
+  }
+
+  /* Highlight is the system's "this is focused" colour, and forced-colors
+     users are disproportionately keyboard users. The UA would force this
+     outline to some system colour anyway; naming Highlight says which. */
+  body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markdown-source-view):not(.markdown-preview-view):not(.workspace-leaf-content) {
+    outline: 2px solid Highlight;
+  }
+
+  /* The `>_` prefix is drawn at 55% opacity, and opacity is NOT forced —
+     it would survive as a faint mark against a palette chosen for maximum
+     separation. Either it is legible or it should not be there. */
+  .markdown-rendered h1::before {
+    opacity: 1;
+  }
+}
+
+/* ── More contrast ──────────────────────────────────────────────
+   `prefers-contrast: more` is a request, not a takeover: unlike
+   forced-colors the theme keeps its palette, so this is the theme's own job
+   rather than the OS's. Obsidian has no rules for it at all.
+
+   Only the tokens that sit closest to their floors move. The neon accents
+   are already 12:1 and untouched — raising them would change the theme's
+   identity to solve a problem it does not have. What moves is everything
+   the base palette deliberately holds down: muted and faint text, the
+   control borders, and the decorative edges that a user asking for more
+   contrast is precisely the user who cannot see them.
+
+   Every value below is checked by scripts/check-contrast.js, which reads
+   these two blocks as separate schemes — see SCHEMES in that file. */
+@media (prefers-contrast: more) {
+  .theme-dark {
+    --text-muted: #c8c8d4;
+    --text-faint: #a5a5b2;
+    --blockquote-color: #d1d1d1;
+    --code-comment: #a8a8bc;
+
+    /* 3.37 -> 7.73 against the page. WCAG 1.4.11 asks 3:1 for a control
+       boundary; this is the same boundary drawn for someone who told the OS
+       that 3:1 is not enough for them. */
+    --cyber-control-border: #8fa6ab;
+    --checkbox-border-color: #8fa6ab;
+
+    /* Decorative edges stay decorative — they just stop being invisible.
+       1.39 is a divider you infer from alignment rather than see. */
+    --background-modifier-border: #6b6b78;
+    --divider-color: #6b6b78;
+    --indentation-guide-color: #55555f;
+  }
+
+  .theme-light {
+    --text-muted: #3a3a45;
+    --text-faint: #4a4a58;
+    --blockquote-color: #2f2f38;
+    --code-comment: #3a3a45;
+    --tag-color: #005863;
+
+    --cyber-control-border: #3d5054;
+    --checkbox-border-color: #3d5054;
+
+    --background-modifier-border: #6c6c80;
+    --divider-color: #6c6c80;
+    --indentation-guide-color: #85859a;
+  }
+
+  /* Glow is a legibility cost paid for atmosphere. Someone who has asked for
+     more contrast has said which of those two they want. */
+  .theme-dark .markdown-rendered h1,
+  .theme-dark .markdown-rendered h2,
+  .theme-dark .markdown-source-view.mod-cm6 .HyperMD-header-1,
+  .theme-dark .markdown-source-view.mod-cm6 .HyperMD-header-2 {
+    text-shadow: none;
+  }
+}
+
 /* ── Print ──────────────────────────────────────────────────────
    Paper is the one surface where this theme's premise is actively wrong.
 

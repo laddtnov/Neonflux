@@ -37,14 +37,52 @@ const CSS = readFileSync(join(ROOT, "src", "theme.css"), "utf8").replace(
  * Anchoring to the line start matters: a bare indexOf would match the word
  * inside a comment, or match `body` inside `body.theme-dark`.
  */
-const blockFor = (selector) => {
-  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
-  const opener = new RegExp(String.raw`^${escaped}\s*\{`, "m");
-  const hit = opener.exec(CSS);
+const escapeForRegex = (text) =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+
+const blockFor = (selector, source = CSS) => {
+  const opener = new RegExp(String.raw`^${escapeForRegex(selector)}\s*\{`, "m");
+  const hit = opener.exec(source);
   if (!hit) return "";
   const open = hit.index + hit[0].length - 1;
-  const close = CSS.indexOf("}", open);
-  return close === -1 ? "" : CSS.slice(open + 1, close);
+  const close = source.indexOf("}", open);
+  return close === -1 ? "" : source.slice(open + 1, close);
+};
+
+/**
+ * Same, for a palette nested inside an `@media` block — where the selector is
+ * indented and so invisible to the column-zero anchor above. That anchor is
+ * load-bearing rather than incidental: it is what stops a lookup for
+ * `.theme-dark` finding the copy inside `@media print` instead of the real
+ * palette, so nested lookups are opt-in and say which block they mean.
+ */
+const nestedBlockFor = (selector, mediaQuery) => {
+  const header = new RegExp(
+    String.raw`@media\s*\(\s*${escapeForRegex(mediaQuery)}\s*\)\s*\{`,
+  );
+  const hit = header.exec(CSS);
+  if (!hit) return "";
+
+  /* Brace-matched, unlike blockFor: a media block contains nested blocks, so
+     the first `}` closes a rule inside it rather than the block itself. */
+  let depth = 0;
+  let i = CSS.indexOf("{", hit.index);
+  const start = i;
+  for (; i < CSS.length; i += 1) {
+    if (CSS[i] === "{") depth += 1;
+    else if (CSS[i] === "}" && (depth -= 1) === 0) break;
+  }
+
+  const body = CSS.slice(start + 1, i);
+  const inner = new RegExp(
+    String.raw`^\s*${escapeForRegex(selector)}\s*\{`,
+    "m",
+  );
+  const at = inner.exec(body);
+  if (!at) return "";
+  const open = at.index + at[0].length - 1;
+  const close = body.indexOf("}", open);
+  return close === -1 ? "" : body.slice(open + 1, close);
 };
 
 /** `--name: value;` pairs in a block, as a Map. */
@@ -147,9 +185,36 @@ const ADVISORY = [
 
 /* ── Run ──────────────────────────────────────────────────────── */
 
+const base = {
+  dark: declarationsIn(blockFor(".theme-dark")),
+  light: declarationsIn(blockFor(".theme-light")),
+};
+
+/* `prefers-contrast: more` overrides a handful of tokens and inherits the
+   rest, so each variant is checked as base-plus-overrides rather than on its
+   own. Checking only the overridden tokens would miss the pair that matters
+   most: a raised foreground against a background that did not move. */
+const MORE_CONTRAST = "prefers-contrast: more";
+const moreContrast = {
+  dark: declarationsIn(nestedBlockFor(".theme-dark", MORE_CONTRAST)),
+  light: declarationsIn(nestedBlockFor(".theme-light", MORE_CONTRAST)),
+};
+
+if (moreContrast.dark.size === 0 || moreContrast.light.size === 0) {
+  console.error(
+    `No palette found under @media (${MORE_CONTRAST}) for both schemes.\n` +
+      "The theme ships one; if it was removed on purpose, drop the variants " +
+      "from SCHEMES here too rather than leaving a check that silently " +
+      "re-tests the base palette under another name.",
+  );
+  process.exit(1);
+}
+
 const THEMES = [
-  ["dark", declarationsIn(blockFor(".theme-dark"))],
-  ["light", declarationsIn(blockFor(".theme-light"))],
+  ["dark", base.dark],
+  ["light", base.light],
+  ["dark + more contrast", new Map([...base.dark, ...moreContrast.dark])],
+  ["light + more contrast", new Map([...base.light, ...moreContrast.light])],
 ];
 
 const shared = declarationsIn(blockFor("body"));
