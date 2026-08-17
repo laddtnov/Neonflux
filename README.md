@@ -12,6 +12,11 @@ Palette shared with [`@laddtnov/cyberpunk-ui`](https://github.com/laddtnov/cyber
 
 ![Neonflux in dark mode](docs/screenshots/dark.png)
 
+![Neonflux in light mode](docs/screenshots/light.png)
+
+Same note, same window, same scroll position — the only difference is the
+colour scheme.
+
 ## What it is
 
 A neon-on-near-black theme for people who read in Obsidian for hours, built so
