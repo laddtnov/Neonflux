@@ -577,3 +577,223 @@ body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markd
     text-shadow: none;
   }
 }
+
+/* ── Print ──────────────────────────────────────────────────────
+   Paper is the one surface where this theme's premise is actively wrong.
+
+   Two things about Obsidian's export are worth knowing before reading this
+   block, because both are the opposite of what you would assume (checked
+   against 1.13.7's app.js and app.css):
+
+     1. Export to PDF ALWAYS renders light. `printToPdf` does
+        `removeClass("theme-dark"); addClass("theme-light")` on the popup
+        document before it renders. So the dramatic dark-mode failure — a
+        sheet flooded with near-black ink — is not the one users actually
+        hit. The light palette is what reaches paper.
+     2. Backgrounds are NOT dropped by the print driver. app.css sets
+        `-webkit-print-color-adjust: exact` on the printed view, which is an
+        explicit instruction to reproduce every fill.
+
+   Together those make the real problem an unglamorous one: the light
+   scheme's page colour is #f0f0f5, and `exact` means that grey is laid down
+   edge to edge on every sheet. Callout fills print as solid blocks, table
+   headers and zebra stripes as bands, and the accents — teal, purple,
+   magenta — print in colour, or as a set of near-identical mid-greys on a
+   mono printer, which reads as a failed export rather than a design.
+
+   So both schemes collapse to one paper palette here. What survives is the
+   TYPE — Orbitron caps, Rajdhani prose, Share Tech Mono code — because the
+   faces are what make an export recognisably Neonflux and they print fine.
+   Obsidian forces `--font-text: var(--font-print)` in print, and that chain
+   falls through to `--font-text-theme`, so prose keeps Rajdhani for free.
+
+   The `.theme-dark` rules below are still worth their two lines: the
+   non-export print paths keep the active scheme, and app.css carries its own
+   `@media print { .theme-dark { … } }`, so Obsidian has not treated dark
+   under print as unreachable either.
+
+   Done as token remapping for the same reason the rest of the theme is: a
+   Dataview table or a Kanban board picks up the paper palette without this
+   block naming it. The rules below are only the cases no token covers.
+
+   Indentation matters more than it looks — scripts/check-contrast.js finds
+   `.theme-dark` by anchoring to the start of a line, so these nested copies
+   are invisible to it and the real palettes stay the ones it checks. */
+@media print {
+  .theme-dark,
+  .theme-light {
+    /* One ink, three weights. Near-black rather than #000: pure black on
+       white is harsher in print than on screen, and #16161d is already the
+       light scheme's darkest base. */
+    --text-normal: #16161d;
+    --text-muted: #4a4a58;
+    --text-faint: #6c6c80;
+    --text-accent: #16161d;
+    --text-accent-hover: #16161d;
+
+    --background-primary: #ffffff;
+    --background-primary-alt: #ffffff;
+    --background-secondary: #ffffff;
+    --background-secondary-alt: #ffffff;
+
+    /* Accent hue drops to zero saturation. Obsidian derives a lot from this
+       triplet, so desaturating here is what stops stray cyan appearing on
+       surfaces this block never mentions. */
+    --accent-h: 0;
+    --accent-s: 0%;
+    --accent-l: 20%;
+    --interactive-accent: #33333b;
+    --text-on-accent: #ffffff;
+
+    /* Headings lose their hue but keep their hierarchy, which on paper is
+       carried by size, weight and casing rather than colour. */
+    --h1-color: #16161d;
+    --h2-color: #16161d;
+    --h3-color: #16161d;
+    --h4-color: #3a3a45;
+    --h5-color: #4a4a58;
+    --h6-color: #4a4a58;
+
+    /* Links print as plain text — the colour is meaningless on paper and the
+       destination is gone either way. Deliberately NOT expanded to
+       `text (https://…)` after each link: in a vault most links are internal,
+       and appending a wikilink target to every one of them turns a printed
+       note into footnote soup. */
+    --link-color: #16161d;
+    --link-color-hover: #16161d;
+    --link-external-color: #16161d;
+    --link-external-color-hover: #16161d;
+    --link-unresolved-color: #4a4a58;
+    --link-unresolved-opacity: 1;
+
+    --blockquote-color: #3a3a45;
+    --blockquote-border-color: #85859a;
+    --embed-border-left: 2px solid #85859a;
+
+    --hr-color: #a8a8bc;
+    --divider-color: #a8a8bc;
+    --indentation-guide-color: #cfcfdc;
+    --indentation-guide-color-active: #a8a8bc;
+
+    /* Rules instead of fills. A zebra-striped table costs half a sheet of
+       toner to say what a hairline says for nothing. */
+    --table-header-background: transparent;
+    --table-row-alt-background: transparent;
+    --table-border-color: #85859a;
+    --background-modifier-border: #a8a8bc;
+    --background-modifier-border-hover: #a8a8bc;
+
+    /* Syntax colour collapses to two weights. Six hues that are distinct on
+       screen become six near-identical greys on a mono printer, which is
+       worse than not colouring at all: it looks like the export failed. */
+    --code-background: transparent;
+    --code-normal: #16161d;
+    --code-comment: #5c5c6b;
+    --code-keyword: #16161d;
+    --code-string: #16161d;
+    --code-function: #16161d;
+    --code-property: #16161d;
+    --code-value: #16161d;
+    --code-operator: #16161d;
+    --code-tag: #16161d;
+    --code-important: #16161d;
+
+    --tag-color: #16161d;
+    --tag-background: transparent;
+    --tag-background-hover: transparent;
+
+    /* A highlight has to survive as a highlight. Grey wash rather than the
+       yellow: `color-adjust: exact` means it will certainly be printed, so
+       the only question is whether it still reads as marked once a mono
+       printer has flattened it — and a light grey does. */
+    --text-highlight-bg: rgba(0, 0, 0, 0.13);
+    --text-selection: transparent;
+
+    --checkbox-color: #16161d;
+    --checkbox-border-color: #4a4a58;
+    --checkbox-marker-color: #ffffff;
+    --bold-color: #16161d;
+    --italic-color: #16161d;
+
+    /* Paper is a light surface, so say so. app.css sets
+       `.theme-dark { color-scheme: dark }`, and that leaks into print through
+       every UA-derived colour — see the rule below for the one that matters. */
+    color-scheme: light;
+  }
+
+  /* The one bug in here that tokens cannot reach, and it only appears in dark.
+     app.css prints with `.print .markdown-preview-view { color: initial }`.
+     `initial` for `color` is `canvastext`, which resolves against the
+     color-scheme — so under `color-scheme: dark` it is WHITE, and every
+     element without a colour of its own prints white on white. Body prose,
+     callout text and table cells vanish; headings, links and code survive
+     because each carries an explicit colour. The result is an export that
+     looks like a rendering failure rather than a note.
+
+     `color-scheme: light` above already fixes it, but this states the ink
+     rather than inheriting whatever `canvastext` happens to mean. Same
+     specificity as app.css's rule; theme.css loads after it, so it wins. */
+  .print .markdown-preview-view,
+  .print .markdown-preview-view mark {
+    color: var(--text-normal);
+  }
+
+  /* Glow is a text-shadow, and a text-shadow does not print as a glow — it
+     prints as a smear around the letterforms. Selectors mirror the ones that
+     set it, matching their specificity so no !important is needed. */
+  .theme-dark .markdown-rendered h1,
+  .theme-dark .markdown-rendered h2,
+  .theme-dark .markdown-source-view.mod-cm6 .HyperMD-header-1,
+  .theme-dark .markdown-source-view.mod-cm6 .HyperMD-header-2 {
+    text-shadow: none;
+  }
+
+  /* The `>_` mark stays — it is the theme's signature and it is two glyphs of
+     ink — but at full opacity in the paper palette, since 55% of a cyan
+     accent prints as a grey smudge rather than a prompt. */
+  .markdown-rendered h1::before {
+    color: #6c6c80;
+    opacity: 1;
+  }
+
+  /* Code blocks and callouts are the two surfaces defined by a fill, so both
+     need that fill turned into an edge — under `color-adjust: exact` a
+     callout prints as a solid block of ink the width of the page. The edge
+     has to replace it rather than simply go, because the box IS the "this
+     part is different"; a borderless callout is an unmarked paragraph. */
+  .markdown-rendered pre,
+  .markdown-rendered .callout {
+    background: transparent;
+    border: 1px solid #a8a8bc;
+  }
+
+  /* Callout type colour comes from an RGB triple Obsidian sets per callout
+     kind, and the title, icon and edge all derive from it. Repointing the
+     triple is one declaration and reaches all three. */
+  .markdown-rendered .callout {
+    --callout-color: 22, 22, 29;
+  }
+
+  /* Print-only concerns with no screen equivalent: a heading stranded at the
+     foot of a page, or a code block guillotined across two. `avoid` is a
+     request, not a guarantee — a table taller than the page still breaks. */
+  .markdown-rendered h1,
+  .markdown-rendered h2,
+  .markdown-rendered h3,
+  .markdown-rendered h4 {
+    break-after: avoid;
+  }
+
+  .markdown-rendered pre,
+  .markdown-rendered blockquote,
+  .markdown-rendered table,
+  .markdown-rendered .callout {
+    break-inside: avoid;
+  }
+
+  /* No @page margin here on purpose: Obsidian's export dialog owns page size
+     and margins, and a theme overriding the setting the user just chose is a
+     bug report waiting to happen. Nor is app chrome hidden — Export to PDF
+     renders the note alone, and the sidebars this would target are not in
+     that DOM to begin with. */
+}
