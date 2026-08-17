@@ -93,6 +93,37 @@ different face, not a paragraph that changes shape. Ukrainian and Russian are
 fully covered by the `cyrillic` subset and are unaffected. Re-adding a subset
 is one line in `scripts/build-fonts.js`.
 
-**Not tested:** Windows and Linux rendering, mobile, the print stylesheet,
-high-contrast / forced-colors mode, and actual screen-reader navigation
-(VoiceOver). Canvas and graph view are token-mapped but were not inspected.
+**Print collapses both schemes to one paper palette.** White page, near-black
+ink, no glow, fills replaced by hairlines. The type stays — the faces are what
+make an export recognisably Neonflux, and they print fine.
+
+Two things about Obsidian's export shaped that block, and both are the
+opposite of the obvious assumption (verified against 1.13.7):
+
+- **Export to PDF always renders light.** `printToPdf` strips `theme-dark` and
+  adds `theme-light` before rendering, so the active scheme does not reach the
+  page and the dark palette never floods a sheet with ink.
+- **Print backgrounds are not dropped.** Obsidian sets
+  `-webkit-print-color-adjust: exact`, an explicit instruction to reproduce
+  every fill — so the light scheme's `#f0f0f5` page colour was being laid down
+  edge to edge on every sheet, and callouts printed as solid blocks.
+
+The dark path also had a bug no colour token could reach. Obsidian prints with
+`color: initial` on the note, and `initial` for `color` is `canvastext`, which
+resolves against the active `color-scheme` — under `.theme-dark`, that is
+**white**. Every element without a colour of its own therefore printed white on
+white: body prose, callout text and table cells disappeared, while headings,
+links and code survived because each carries an explicit colour. The theme now
+sets `color-scheme: light` in print and states the ink colour outright. Only
+reachable through the non-export print paths, since Export to PDF forces light
+before it renders — but it is one declaration to prevent.
+
+Verified by rendering the print media directly — Obsidian's own `app.css` plus
+`theme.css` over the same DOM `print()` builds — rather than by reading the
+CSS. Syntax highlighting collapses to two weights on paper on purpose: six
+hues that separate on screen become six near-identical greys on a mono
+printer, which reads as a broken export rather than as colour.
+
+**Not tested:** Windows and Linux rendering, mobile, high-contrast /
+forced-colors mode, and actual screen-reader navigation (VoiceOver). Canvas
+and graph view are token-mapped but were not inspected.
