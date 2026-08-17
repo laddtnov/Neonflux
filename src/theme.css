@@ -72,6 +72,18 @@ body {
   --divider-width: 1px;
 
   --ease-cyber: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Icons. Obsidian injects lucide SVGs itself, so a theme restyles them
+     through these tokens rather than replacing artwork — see the Icons
+     section below, which remaps the callout glyphs by name. The stroke width
+     is already 1.75px by default; what changes here is that the accent
+     reaches hover, where the app leaves icons muted.
+
+     These live in this block rather than beside that section because they
+     belong to `body` and a stylesheet should define an element once. */
+  --icon-color-hover: var(--text-accent);
+  --icon-opacity: 0.9;
+  --icon-opacity-hover: 1;
 }
 
 /* ── Dark ───────────────────────────────────────────────────────
@@ -573,15 +585,10 @@ body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markd
    Callout icons are the exception: those ARE addressable by name, and the
    defaults lean soft — a pencil, a flame, a clipboard. Every name below was
    checked against the lucide build Obsidian bundles, because a name that
-   does not resolve renders no icon at all rather than falling back. */
-body {
-  /* 1.75px is Obsidian's own default at this size; what changes is that the
-     accent now reaches hover, where the app leaves icons muted. */
-  --icon-color-hover: var(--text-accent);
-  --icon-opacity: 0.9;
-  --icon-opacity-hover: 1;
-}
+   does not resolve renders no icon at all rather than falling back.
 
+   The icon tokens themselves are set in the `body` block at the top of this
+   file, with the rest of what that element defines. */
 .callout[data-callout="note"] {
   --callout-icon: lucide-terminal;
 }
