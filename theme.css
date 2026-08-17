@@ -648,8 +648,7 @@ body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markd
 }
 
 /* The box for a custom state: hollow, with the character inside it. Obsidian
-   fills a checked box and masks a tick into it, so both have to be undone —
-   the mask especially, since it would otherwise sit on top of the glyph. */
+   fills a checked box and masks a tick into it, so both have to be undone. */
 .task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
   > .task-list-item-checkbox,
 .task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
@@ -662,6 +661,12 @@ body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markd
   position: relative;
 }
 
+/* The tick lives in ::after, and Obsidian clips it to a checkmark with a
+   mask. Removing the pseudo-element removes the mask with it — which is
+   better than cancelling the mask by hand, because the CSS masking properties
+   are a feature Obsidian's own theme linter flags as only partially
+   supported, and a reset is not worth a warning on every submission. The
+   glyph then goes in ::before, which nothing in app.css touches. */
 .task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
   > .task-list-item-checkbox::after,
 .task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
@@ -669,16 +674,24 @@ body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markd
   > .task-list-item-checkbox::after,
 .HyperMD-task-line[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
   .task-list-item-checkbox::after {
+  content: none;
+}
+
+.task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
+  > .task-list-item-checkbox::before,
+.task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
+  > p
+  > .task-list-item-checkbox::before,
+.HyperMD-task-line[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
+  .task-list-item-checkbox::before {
   content: var(--flux-task-glyph, "");
-  -webkit-mask-image: none;
-  mask-image: none;
-  background-color: transparent;
+  position: absolute;
+  inset: 0;
   color: var(--flux-task-color);
   font-family: var(--font-monospace-theme);
   font-size: calc(var(--checkbox-size) * 0.85);
   line-height: var(--checkbox-size);
   text-align: center;
-  inset: 0;
 }
 
 /* ── Icons ──────────────────────────────────────────────────────
@@ -1220,19 +1233,26 @@ settings:
 
   /* Print-only concerns with no screen equivalent: a heading stranded at the
      foot of a page, or a code block guillotined across two. `avoid` is a
-     request, not a guarantee — a table taller than the page still breaks. */
+     request, not a guarantee — a table taller than the page still breaks.
+
+     The CSS 2.1 spellings rather than the `break-*` ones from the
+     fragmentation module. Chromium maps them to the same behaviour, they are
+     the older and better-supported pair for paged media, and `break-*` is
+     part of the multi-column feature that Obsidian's theme linter flags as
+     only partially supported — a warning on every submission is a poor trade
+     for a synonym. */
   .markdown-rendered h1,
   .markdown-rendered h2,
   .markdown-rendered h3,
   .markdown-rendered h4 {
-    break-after: avoid;
+    page-break-after: avoid;
   }
 
   .markdown-rendered pre,
   .markdown-rendered blockquote,
   .markdown-rendered table,
   .markdown-rendered .callout {
-    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   /* No @page margin here on purpose: Obsidian's export dialog owns page size
