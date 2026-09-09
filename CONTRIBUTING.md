@@ -26,9 +26,10 @@ the only file Obsidian loads. Editing the source without running
 because `npm run dev` installed the fresh copy there. CI rebuilds and fails on
 the diff.
 
-**`theme.css` has a size budget, and CI enforces it.** The file is ~83% inlined
+**`theme.css` has a size budget, and CI enforces it.** The file is ~two-thirds
+inlined
 font data, it reached 189KB once, and Obsidian's review flagged it. Two
-ceilings now fail the build: 150KB for the whole file and 112KB for the font
+ceilings now fail the build: 165KB for the whole file and 112KB for the font
 payload alone, both in `scripts/check-size.js`. Split that way because a font
 subset creeping back and the stylesheet honestly growing are different
 problems. Going over is nearly always the former — check the `GROUPS` in

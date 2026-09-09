@@ -77,6 +77,7 @@ build artifact — fonts prepended to the source — and is what Obsidian loads.
 ```sh
 npm run build           # src/theme.css + fonts -> theme.css
 npm run check:contrast  # WCAG check, both themes
+npm run check:size      # size budget, the one CI fails on
 npm run dev             # build, then install into demo-vault/
 npm run build:fonts     # re-download and re-inline the fonts (rarely needed)
 npm run release 0.2.0   # bump, verify, tag, publish
@@ -131,9 +132,9 @@ twice.
 
 Only the **base `latin` and `cyrillic` subsets** are embedded. The `-ext`
 subsets were another 64KB — Church Slavonic and historic letterforms on one
-side, Central-European and Turkish diacritics on the other — against a 18KB
-stylesheet, which is what put `theme.css` past the size Obsidian's review is
-happy with. The trade is narrow and per-glyph: a Polish `ł` or a Czech `ř`
+side, Central-European and Turkish diacritics on the other — against what was
+then an 18KB stylesheet, which is what put `theme.css` past the size Obsidian's
+review is happy with. The trade is narrow and per-glyph: a Polish `ł` or a Czech `ř`
 takes the system UI font, the rest of the word stays in Rajdhani.
 
 All six are SIL Open Font License 1.1, which permits this redistribution.
@@ -147,8 +148,9 @@ the sibling CSS kit uses: muted text and syntax colours are held to 4.5:1, not
 somebody parses.
 
 [`ACCESSIBILITY.md`](ACCESSIBILITY.md) records what passes, what was fixed,
-and — more usefully — the three known problems that remain, including the
-Cyrillic gap and the screen-reader announcement of the `>_` prompt.
+and — more usefully — the trade-offs that remain, including the extended-Latin
+and extended-Cyrillic gap and the screen-reader announcement of the `>_`
+prompt.
 
 ## Licence
 

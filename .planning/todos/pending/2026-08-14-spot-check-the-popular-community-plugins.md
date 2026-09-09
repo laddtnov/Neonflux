@@ -3,8 +3,8 @@ created: 2026-08-14T12:24:30.822Z
 title: Spot-check the popular community plugins
 area: ui
 files:
-  - src/theme.css:77-377
-  - README.md:100-120
+  - src/theme.css
+  - README.md
 milestone: 0.3.0
 order: 4
 ---

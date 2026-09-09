@@ -648,7 +648,16 @@ body:not(.is-mobile) *:focus-visible:not(.cm-editor):not(.cm-content):not(.markd
 }
 
 /* The box for a custom state: hollow, with the character inside it. Obsidian
-   fills a checked box and masks a tick into it, so both have to be undone. */
+   fills a checked box and masks a tick into it, so both have to be undone.
+
+   The predicate below repeats verbatim across the next three rules, and it
+   stays that way on purpose. The `>` and `> p >` variants are not redundant —
+   a descendant combinator would reach the checkbox of a nested sublist and
+   restyle a child task from its parent's state. The `:not()` chain would
+   compress to `:not([data-task=" "], [data-task="x"], [data-task="X"])`, but
+   a selector list inside `:not()` is exactly the kind of partially-supported
+   feature Obsidian's theme linter flags, and 0.2.1 exists because of two of
+   those. Nine lines of repetition is the cheaper side of that trade. */
 .task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
   > .task-list-item-checkbox,
 .task-list-item[data-task]:not([data-task=" "]):not([data-task="x"]):not([data-task="X"])
@@ -1209,7 +1218,7 @@ settings:
      ink — but at full opacity in the paper palette, since 55% of a cyan
      accent prints as a grey smudge rather than a prompt. */
   .markdown-rendered h1::before {
-    color: #6c6c80;
+    color: var(--text-faint);
     opacity: 1;
   }
 
@@ -1221,7 +1230,7 @@ settings:
   .markdown-rendered pre,
   .markdown-rendered .callout {
     background: transparent;
-    border: 1px solid #a8a8bc;
+    border: 1px solid var(--background-modifier-border);
   }
 
   /* Callout type colour comes from an RGB triple Obsidian sets per callout

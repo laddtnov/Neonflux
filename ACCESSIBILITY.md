@@ -102,8 +102,8 @@ Settings, which hands back prose and keeps Orbitron on the headings.
 
 **Extended Latin and extended Cyrillic fall back to the system font.** Only
 the base `latin` and `cyrillic` subsets are embedded; the `-ext` subsets cost
-64KB against an 18KB stylesheet and pushed `theme.css` past the size Obsidian's
-review accepts. So a Polish `ł`, a Czech `ř`, a Turkish `ğ` — and on the
+64KB against what was then an 18KB stylesheet and pushed `theme.css` past the
+size Obsidian's review accepts. So a Polish `ł`, a Czech `ř`, a Turkish `ğ` — and on the
 Cyrillic side, Church Slavonic and minority-language letters — render in the
 system UI font. Fallback is per-glyph, so this shows up as one character in a
 different face, not a paragraph that changes shape. Ukrainian and Russian are

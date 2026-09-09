@@ -212,7 +212,7 @@ if (moreContrast.dark.size === 0 || moreContrast.light.size === 0) {
   console.error(
     `No palette found under @media (${MORE_CONTRAST}) for both schemes.\n` +
       "The theme ships one; if it was removed on purpose, drop the variants " +
-      "from SCHEMES here too rather than leaving a check that silently " +
+      "from THEMES here too rather than leaving a check that silently " +
       "re-tests the base palette under another name.",
   );
   process.exit(1);

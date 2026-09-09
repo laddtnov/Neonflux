@@ -22,8 +22,9 @@
  * this script only has to avoid shipping Latin twice.
  *
  * BASE SUBSETS ONLY — no `latin-ext`, no `cyrillic-ext`. Obsidian's review
- * flags a theme.css this size, and the whole file is font data: the authored
- * stylesheet is 18KB of 189KB. The `-ext` subsets were 64KB of that, spent on
+ * flags a theme.css this size, and the whole file is font data: when this was
+ * decided the authored stylesheet was 18KB of 189KB, and it has since grown to
+ * 45KB against a smaller total. The `-ext` subsets were 64KB of that, spent on
  * glyphs this theme's users almost never type — `cyrillic-ext` is Church
  * Slavonic, Abkhaz and historic letterforms; `latin-ext` is Central-European
  * and Turkish diacritics. Dropping them keeps every glyph of English,
