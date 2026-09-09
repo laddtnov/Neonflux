@@ -6,9 +6,7 @@ node_modules/
 # turned up first claimed a dev server on port 3000, which does not exist
 # here, since `npm run dev` installs into a vault rather than serving.
 .claude/
-
-# Google Fonts CSS, re-fetchable with `npm run build:fonts`.
-fonts/src/
+.omc/
 
 # Obsidian writes workspace state into the demo vault on every open.
 demo-vault/.obsidian/workspace.json
