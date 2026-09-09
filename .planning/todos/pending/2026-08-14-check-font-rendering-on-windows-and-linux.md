@@ -5,7 +5,7 @@ area: ui
 files:
   - fonts/fonts.css
   - scripts/font-check.html
-  - ACCESSIBILITY.md:86-88
+  - ACCESSIBILITY.md
 milestone: 0.3.0
 order: 2
 ---

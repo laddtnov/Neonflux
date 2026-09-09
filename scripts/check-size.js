@@ -11,8 +11,8 @@
  * reasons and want different verdicts:
  *
  *   TOTAL    — what Obsidian's reviewer actually weighs. Grows for honest
- *              reasons too (the Style Settings block is coming), so it carries
- *              real headroom.
+ *              reasons too — a feature, a media block, a documented rule — so
+ *              it carries real headroom.
  *   PAYLOAD  — the base64 font data alone. This is the half that moves in
  *              large steps, and measuring it separately means 20KB of new
  *              stylesheet is never mistaken for a subset that crept back.
@@ -47,7 +47,12 @@ const KB = 1024;
        not moved from 103KB through any of it, which is exactly the split the
        two budgets exist to show.
      - 165KB still sits ~24KB below the 189KB that drew Obsidian's review
-       flag, and leaves ~19KB for the Style Settings block.
+       flag.
+
+   Style Settings has since landed, which is what the last ~7KB bought:
+   theme.css is 152.7KB and the remaining headroom is ~12KB against no
+   planned addition. So the next feature to grow the stylesheet is the one
+   that has to answer for the ceiling.
 
    If this needs raising a second time, the honest move is probably to cut
    comment volume or revisit the Cyrillic companions rather than to keep

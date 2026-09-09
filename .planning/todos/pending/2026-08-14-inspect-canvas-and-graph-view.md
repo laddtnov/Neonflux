@@ -3,8 +3,8 @@ created: 2026-08-14T12:24:30.822Z
 title: Inspect Canvas and graph view
 area: ui
 files:
-  - src/theme.css:77-377
-  - ACCESSIBILITY.md:86-88
+  - src/theme.css
+  - ACCESSIBILITY.md
   - demo-vault/Kitchen Sink.md
 milestone: 0.3.0
 order: 3

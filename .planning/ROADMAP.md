@@ -99,10 +99,11 @@ trust. If the evidence forces a change — re-adding `latin-ext`, say — that i
 
 ## Not in either milestone
 
-**Further size cuts.** Dropping the Cyrillic companions takes `theme.css` to
-74KB, and it stays a documented option rather than a plan — it costs Ukrainian
-and Russian notes their theme face. Revisit only if Obsidian's review flags
-124KB, which it has not.
+**Further size cuts.** Dropping the Cyrillic companions takes `theme.css` from
+152.7KB to 103.6KB, and it stays a documented option rather than a plan — it
+costs Ukrainian and Russian notes their theme face. Revisit only if the size
+budget in `scripts/check-size.js` needs raising a second time, or if Obsidian's
+review flags the file again, neither of which has happened.
 
 **An Obsidian Publish theme (`publish.css`).** A separate product with its own
 size target and its own surfaces. Worth wanting; not worth mixing into a
