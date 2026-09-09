@@ -8,6 +8,13 @@ node_modules/
 .claude/
 .omc/
 
+# Raw Google Fonts CSS, from when build-fonts.js wrote the fetched stylesheet
+# to disk before inlining it. The current script keeps it in memory and writes
+# only fonts/fonts.css, so nothing recreates this — but a checkout old enough
+# to have run the earlier version still carries fonts/src/gf.css, and it is
+# not something to commit. Kept for those checkouts, not for the build.
+fonts/src/
+
 # Obsidian writes workspace state into the demo vault on every open.
 demo-vault/.obsidian/workspace.json
 demo-vault/.obsidian/themes/
