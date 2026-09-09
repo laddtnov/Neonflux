@@ -448,7 +448,10 @@ body {
    token because Obsidian draws form fields and decorative edges from the SAME
    token (--background-modifier-border), and only one of those two uses has to
    clear 3:1. Raising the shared token instead would have put a visible seam on
-   every table, callout, and card in the vault to fix a checkbox. */
+   every table, callout, and card in the vault to fix a checkbox.
+
+   `password` and `email` are real: 1.13.7 draws both in the account login
+   form, and dropping them gives a masked field the 1.39:1 shared token. */
 input[type="text"],
 input[type="search"],
 input[type="number"],
