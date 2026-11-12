@@ -1,0 +1,70 @@
+{
+  "comment": "SHA-256 of each woff2 embedded in fonts/fonts.css. Regenerate deliberately: UPDATE_FONT_LOCK=1 npm run build:fonts",
+  "generated": "2026-11-12",
+  "faces": [
+    {
+      "family": "Exo 2",
+      "style": "normal",
+      "weight": "400 700",
+      "subset": "cyrillic",
+      "bytes": 19580,
+      "sha256": "0e72634bc91e136af6de39939ed7fd27f0fe20095b949a0f0d8e176519dc5711"
+    },
+    {
+      "family": "JetBrains Mono",
+      "style": "normal",
+      "weight": "400",
+      "subset": "cyrillic",
+      "bytes": 5324,
+      "sha256": "4188276a58108d04eb0c6f5b8c9e4b5ac2d9e31e81b2b4fa7da263b92f1b35c3"
+    },
+    {
+      "family": "Orbitron",
+      "style": "normal",
+      "weight": "700",
+      "subset": "latin",
+      "bytes": 6536,
+      "sha256": "2a1e09a8665a3c3138b7bf3115aaac81bb3e7444fd260163563c4930987012ae"
+    },
+    {
+      "family": "Rajdhani",
+      "style": "normal",
+      "weight": "400",
+      "subset": "latin",
+      "bytes": 8968,
+      "sha256": "e8dbeb7ec5d3c9b137965e9b2d3c04b79ef287d0c7403937e8d3992c708a4eb5"
+    },
+    {
+      "family": "Rajdhani",
+      "style": "normal",
+      "weight": "600",
+      "subset": "latin",
+      "bytes": 9400,
+      "sha256": "35f7e628ec8e7dd3bf434e95ce28289803401f12d8605c56ca83db2b4b301d33"
+    },
+    {
+      "family": "Rajdhani",
+      "style": "normal",
+      "weight": "700",
+      "subset": "latin",
+      "bytes": 9304,
+      "sha256": "7597c31a957ae3d2e1ebc786238752d883c15ce2e6b5da617dc3453a9fd86335"
+    },
+    {
+      "family": "Share Tech Mono",
+      "style": "normal",
+      "weight": "400",
+      "subset": "latin",
+      "bytes": 7408,
+      "sha256": "73b87eb7b02dfec4cb1ddfabad6e625d9c77b3c81015064420de88d8dd04816c"
+    },
+    {
+      "family": "Unbounded",
+      "style": "normal",
+      "weight": "700",
+      "subset": "cyrillic",
+      "bytes": 12828,
+      "sha256": "9d61d7777c15a3908b2b08bafe5496de33484816b6f82150c16af57c0dacdf96"
+    }
+  ]
+}

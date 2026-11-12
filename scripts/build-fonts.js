@@ -39,12 +39,62 @@
  * Run: node scripts/build-fonts.js
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "fonts", "fonts.css");
+const LOCK = join(ROOT, "fonts", "fonts.lock.json");
+
+/* Google serves these over HTTPS and nothing verifies what comes back. The
+   bytes are then base64'd straight into the file every user installs, so an
+   unexpected response ships to everyone. The lockfile turns that from silent
+   into a failed build: each face is keyed by family/style/weight/subset — not
+   by URL, which carries a version hash and changes whenever Google reissues —
+   and its SHA-256 must match.
+
+   A changed hash is not proof of an attack; a routine reissue looks the same.
+   It means LOOK, then re-lock on purpose:
+
+     UPDATE_FONT_LOCK=1 npm run build:fonts
+
+   Faces absent from the lock are reported and recorded rather than failed,
+   so adding one to GROUPS does not require a separate re-lock run. */
+const RELOCK = process.env.UPDATE_FONT_LOCK === "1";
+const keyOf = (face) =>
+  `${face.family}|${face.style}|${face.weight}|${face.subset}`;
+
+const lockOnDisk = existsSync(LOCK)
+  ? new Map(JSON.parse(readFileSync(LOCK, "utf8")).faces.map((f) => [keyOf(f), f]))
+  : new Map();
+
+const locked = [];
+const mismatches = [];
+
+/** Compare one fetched face against the lock. Pure — see --self-check. */
+const checkFace = (face, sha256, bytes, known) => {
+  const entry = { ...face, bytes, sha256 };
+  if (!known) return { entry, verdict: "new" };
+  if (known.sha256 === sha256) return { entry, verdict: "match" };
+  return { entry, verdict: "mismatch", was: known.sha256 };
+};
+
+if (process.argv.includes("--self-check")) {
+  const assert = (ok, what) => {
+    if (!ok) throw new Error(`self-check failed: ${what}`);
+  };
+  const f = { family: "X", style: "normal", weight: "400", subset: "latin" };
+  assert(checkFace(f, "aa", 1, undefined).verdict === "new", "unknown face is new");
+  assert(checkFace(f, "aa", 1, { sha256: "aa" }).verdict === "match", "same hash matches");
+  const bad = checkFace(f, "bb", 1, { sha256: "aa" });
+  assert(bad.verdict === "mismatch" && bad.was === "aa", "changed hash mismatches");
+  assert(keyOf(f) === "X|normal|400|latin", "key shape");
+  assert(keyOf({ ...f, subset: "cyrillic" }) !== keyOf(f), "subset is part of the key");
+  console.log("self-check ok");
+  process.exit(0);
+}
 
 const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
@@ -173,8 +223,29 @@ for (const group of GROUPS) {
     const high = Math.max(...face.weights);
     const weight = low === high ? `${low}` : `${low} ${high}`;
 
+    const identity = {
+      family: face.family,
+      style: face.style,
+      weight,
+      subset: face.subset,
+    };
+    const sha256 = createHash("sha256").update(bytes).digest("hex");
+    const { entry, verdict, was } = checkFace(
+      identity,
+      sha256,
+      bytes.length,
+      lockOnDisk.get(keyOf(identity)),
+    );
+    locked.push(entry);
+    if (verdict === "mismatch" && !RELOCK) {
+      mismatches.push({ ...entry, was });
+    }
+
+    const mark =
+      verdict === "match" ? "✓" : verdict === "new" ? "+" : RELOCK ? "~" : "✗";
+
     console.log(
-      `  ${face.family} ${weight} ${face.subset}`.padEnd(42) +
+      `  ${mark} ${face.family} ${weight} ${face.subset}`.padEnd(44) +
         `${(bytes.length / 1024).toFixed(1)} KB`,
     );
 
@@ -192,8 +263,49 @@ for (const group of GROUPS) {
   }
 }
 
+/* Before anything is written. A mismatch means the bytes about to be inlined
+   into every installed copy are not the bytes that were reviewed, so the
+   build stops with fonts.css untouched rather than leaving a half-verified
+   artifact on disk for someone to commit. */
+if (mismatches.length > 0) {
+  console.error(
+    `\n${mismatches.length} font(s) do not match fonts.lock.json:\n` +
+      mismatches
+        .map(
+          (m) =>
+            `  ${m.family} ${m.weight} ${m.subset}\n` +
+            `    locked ${m.was}\n` +
+            `    got    ${m.sha256}`,
+        )
+        .join("\n") +
+      "\n\nfonts.css was NOT written. Google reissuing a face looks identical " +
+      "to a tampered response from here, so this is a prompt to look rather " +
+      "than a verdict. If the change is expected, re-lock deliberately:\n" +
+      "  UPDATE_FONT_LOCK=1 npm run build:fonts",
+  );
+  process.exit(1);
+}
+
 mkdirSync(dirname(OUT), { recursive: true });
 writeFileSync(OUT, out.join("\n") + "\n");
+
+locked.sort((a, b) =>
+  `${a.family}${a.weight}`.localeCompare(`${b.family}${b.weight}`),
+);
+writeFileSync(
+  LOCK,
+  JSON.stringify(
+    {
+      comment:
+        "SHA-256 of each woff2 embedded in fonts/fonts.css. Regenerate " +
+        "deliberately: UPDATE_FONT_LOCK=1 npm run build:fonts",
+      generated: new Date().toISOString().slice(0, 10),
+      faces: locked,
+    },
+    null,
+    2,
+  ) + "\n",
+);
 
 const written = readFileSync(OUT).length;
 console.log(
