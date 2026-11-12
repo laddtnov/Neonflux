@@ -16,7 +16,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 2
 
-      - uses: anthropics/claude-code-security-review@main
+      # Pinned to a commit, not @main. This job holds CLAUDE_API_KEY and
+      # pull-requests: write, so a mutable ref means whatever that branch
+      # points at on the next run executes with both. The action ships no
+      # tags, so a SHA is the only immutable ref available. Bump deliberately.
+      - uses: anthropics/claude-code-security-review@0c6a49f1fa56a1d472575da86a94dbc1edb78eda # main @ 2026-02-11
         with:
           comment-pr: true
           claude-api-key: ${{ secrets.CLAUDE_API_KEY }}
