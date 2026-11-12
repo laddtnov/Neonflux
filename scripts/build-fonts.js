@@ -63,6 +63,10 @@ const LOCK = join(ROOT, "fonts", "fonts.lock.json");
    Faces absent from the lock are reported and recorded rather than failed,
    so adding one to GROUPS does not require a separate re-lock run. */
 const RELOCK = process.env.UPDATE_FONT_LOCK === "1";
+
+/* Per-face verdict marker. ~ rather than ✗ under RELOCK, because there the
+   changed hash is being accepted on purpose rather than failing the build. */
+const MARK = { match: "✓", new: "+", mismatch: RELOCK ? "~" : "✗" };
 const keyOf = (face) =>
   `${face.family}|${face.style}|${face.weight}|${face.subset}`;
 
@@ -241,11 +245,8 @@ for (const group of GROUPS) {
       mismatches.push({ ...entry, was });
     }
 
-    const mark =
-      verdict === "match" ? "✓" : verdict === "new" ? "+" : RELOCK ? "~" : "✗";
-
     console.log(
-      `  ${mark} ${face.family} ${weight} ${face.subset}`.padEnd(44) +
+      `  ${MARK[verdict]} ${face.family} ${weight} ${face.subset}`.padEnd(44) +
         `${(bytes.length / 1024).toFixed(1)} KB`,
     );
 
